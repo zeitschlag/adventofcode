@@ -1008,10 +1008,14 @@ input = '''+15
 +24
 +130793'''
 
-lines = input.split("\n")
-result = 0
+def first_part():
+    lines = input.split("\n")
+    result = 0
+    
+    for line in lines:
+        result = result + int(line)
+    
+    print("The result of the first advent of code task is:", result)
 
-for line in lines:
-    result = result + int(line)
-
-print(result)
+if __name__ == "__main__":
+    first_part()
