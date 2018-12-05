@@ -1012,7 +1012,6 @@ lines = input.split("\n")
 result = 0
 
 for line in lines:
-    if line is not '':
-        result = result + int(line)
+    result = result + int(line)
 
 print(result)
