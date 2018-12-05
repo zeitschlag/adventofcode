@@ -1017,5 +1017,23 @@ def first_part(input_list):
     
     print("The result of the first advent of code task is:", result)
 
+def second_part(input_list):
+    lines = input_list.split("\n")
+    first_frequency_twice = 0
+    frequency = 0
+    temp_set = set()
+    for frequency_change in lines:
+ #       print("frequency before: " + repr(frequency) + ", change: "+repr(frequency_change))
+        frequency = frequency + int(frequency_change)
+#        print("frequency after: " + repr(frequency))
+        if frequency in temp_set:
+            first_frequency_twice = frequency
+            break
+        else:
+            temp_set.add(frequency)
+        
+    print("The first frequency appearing twice is:", first_frequency_twice)
+
 if __name__ == "__main__":
-    first_part()
+    first_part(input)
+    second_part(input)
