@@ -1008,8 +1008,8 @@ input = '''+15
 +24
 +130793'''
 
-def first_part():
-    lines = input.split("\n")
+def first_part(input_list):
+    lines = input_list.split("\n")
     result = 0
     
     for line in lines:
