@@ -1,19 +1,26 @@
 class SecondDay:
 
     def __init__(self):
-
-        twosCounter= 0
-        threesCounter = 0
+        self.twosCounter= 0
+        self.threesCounter = 0
 
     def firstPart(self, inputFilePath):
     # read input files like before.
-    # counter for two letter appearences
-    # gets increased, if an ID contains the same letter twice
-    # counter for three letter appearences
-    # gets increased, if an ID contains the same letter three times.
-    # if an id contains two/three letters twice, the counter gets increased by one only once
-    # multiply these counters to get the checksum
-        pass
+        lines = open(inputFilePath, "r").read().split("\n")
+
+        for line in lines:
+            containsTwos = self.containsRandomCharacterExactlyTwice(testString=line)
+            containsThrees = self.containsRandomCharacterExactlyThreeTimes(testString=line)
+
+            if containsTwos is True:
+                self.increaseTwosCounter()
+
+            if containsThrees is True:
+                self.increaseThreesCounter()
+
+        checksum = self.calculateChecksum(twosCounter=self.twosCounter, threesCounter=self.threesCounter)
+        print("Calculated checksum is ", checksum)
+
     def increaseTwosCounter(self):
         self.twosCounter = self.twosCounter + 1
 
@@ -44,7 +51,9 @@ class SecondDay:
         return False
 
     def calculateChecksum(self, twosCounter, threesCounter):
+        import pdb; pdb.set_trace()
         return twosCounter * threesCounter
 
 if __name__ == '__main__':
-    first_part("input.txt")
+    secondDay = SecondDay()
+    secondDay.firstPart("input.txt")
