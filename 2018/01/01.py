@@ -1008,6 +1008,7 @@ input = '''+15
 +24
 +130793'''
 
+
 def first_part(input_list):
     lines = input_list.split("\n")
     result = 0
@@ -1018,20 +1019,25 @@ def first_part(input_list):
     print("The result of the first advent of code task is:", result)
 
 def second_part(input_list):
+
     lines = input_list.split("\n")
-    first_frequency_twice = 0
+    first_frequency_twice = None
     frequency = 0
     temp_set = set()
+
     for frequency_change in lines:
- #       print("frequency before: " + repr(frequency) + ", change: "+repr(frequency_change))
         frequency = frequency + int(frequency_change)
-#        print("frequency after: " + repr(frequency))
         if frequency in temp_set:
             first_frequency_twice = frequency
             break
         else:
             temp_set.add(frequency)
-        
+
+        if frequency_change is lines[-1] and first_frequency_twice is None:
+            # i walked through the list only once, but it might be possible,
+            # that i have to do so several times
+            lines.extend(input_list.split("\n"))
+
     print("The first frequency appearing twice is:", first_frequency_twice)
 
 if __name__ == "__main__":
