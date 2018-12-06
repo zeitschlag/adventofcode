@@ -14,6 +14,11 @@ class SecondDay:
     # if an id contains two/three letters twice, the counter gets increased by one only once
     # multiply these counters to get the checksum
         pass
+    def increaseTwosCounter(self):
+        self.twosCounter = self.twosCounter + 1
+
+    def increaseThreesCounter(self):
+        self.threesCounter = self.threesCounter + 1
 
     # checks, if a string contains a character exactly twice
     def containsRandomCharacterExactlyTwice(self, testString):

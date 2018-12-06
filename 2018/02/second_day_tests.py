@@ -60,5 +60,21 @@ class SecondDayTests(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
+    def test_increaseTwosCounter(self):
+        expected = 1
+        self.sut.increaseTwosCounter()
+        self.assertEqual(self.sut.twosCounter, expected)
+
+        expected = 2
+        self.sut.increaseTwosCounter()
+        self.assertEqual(self.sut.twosCounter, expected)
+
+    def test_increaseThreesCounter(self):
+
+        expected = 5
+        self.sut.threesCounter = 4
+        self.sut.increaseThreesCounter()
+        self.assertEqual(self.sut.threesCounter, expected)
+
 if __name__ == '__main__':
     unittest.main()
