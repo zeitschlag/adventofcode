@@ -76,5 +76,31 @@ class SecondDayTests(unittest.TestCase):
         self.sut.increaseThreesCounter()
         self.assertEqual(self.sut.threesCounter, expected)
 
+    def test_lettersInCommon(self):
+
+        expected = "ab"
+        result = self.sut.lettersInCommon("abc", "abd")
+
+        self.assertEqual(expected, result)
+
+    def test_lettersInCommonEmpty(self):
+
+        expected = ""
+        result = self.sut.lettersInCommon("abc", "")
+
+        self.assertEqual(expected, result)
+
+    def testLettersInCommonWholeString(self):
+        expected = "abcde"
+        result = self.sut.lettersInCommon("abcde", "abcde")
+
+        self.assertEqual(expected, result)
+
+    def test_LettersInCommonDifferentLength(self):
+        expected = ""
+        result = self.sut.lettersInCommon("abcde", "abc")
+
+        self.assertEqual(expected, result)
+
 if __name__ == '__main__':
     unittest.main()

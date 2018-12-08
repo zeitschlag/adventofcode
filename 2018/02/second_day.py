@@ -51,9 +51,39 @@ class SecondDay:
         return False
 
     def calculateChecksum(self, twosCounter, threesCounter):
-        import pdb; pdb.set_trace()
         return twosCounter * threesCounter
+
+    def secondPart(self, inputFilePath):
+
+        lines = open(inputFilePath, "r").read().split("\n")
+
+        for lhs in lines:
+            for rhs in lines:
+                lettersInCommon = self.lettersInCommon(lhs,rhs)
+                if len(lettersInCommon) is len(lhs)-1 and len(lettersInCommon) is len(rhs)-1:
+                    print("1. ID: %s" % lhs)
+                    print("2. ID: %s" % rhs)
+                    print("Letters in Common: %s" % "".join(lettersInCommon))
+
+    def lettersInCommon(self, lhs, rhs):
+        
+        firstList = list(lhs)
+        secondList = list(rhs)
+        charactersInCommon = list()
+
+        if len(lhs) is not len(rhs):
+            return ""
+
+        for i in range(0, len(lhs)):
+            firstChar = lhs[i]
+            secondChar = rhs[i]
+
+            if firstChar is secondChar:
+                charactersInCommon.append(firstChar)
+
+        return "".join(charactersInCommon)
 
 if __name__ == '__main__':
     secondDay = SecondDay()
     secondDay.firstPart("input.txt")
+    secondDay.secondPart("input.txt")
