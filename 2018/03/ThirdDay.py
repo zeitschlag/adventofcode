@@ -45,11 +45,10 @@ class ThirdDay:
         print(claimedAtLeastTwice)
 
     def createCoordinates(self, x, y, width, height):
-        coordinates = list()
+        coordinates = set()
         for i in range(x, x+width):
             for j in range(y, y+height):
-                newCoordinate = [i, j]
-                coordinates.append(newCoordinate)
+                coordinates.add(str(i) + "," + str(j))
         
         return coordinates
 

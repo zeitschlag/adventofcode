@@ -13,7 +13,7 @@ class UnitTests(unittest.TestCase):
         width = 1
         height = 1
 
-        expected = [[0,0]]
+        expected = {"0,0"}
         result = self.sut.createCoordinates(x, y, width, height)
 
         self.assertEqual(expected, result)
@@ -24,7 +24,7 @@ class UnitTests(unittest.TestCase):
         width = 2
         height = 2
 
-        expected = [[2, 2], [2, 3], [3, 2], [3, 3]]
+        expected = {"2,2", "2,3", "3,2", "3,3"}
         result = self.sut.createCoordinates(x, y, width, height)
 
         self.assertEqual(expected, result)
