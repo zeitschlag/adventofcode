@@ -31,18 +31,12 @@ class ThirdDay:
 
             coordinates = self.createCoordinates(x, y, width, height)
             claimed.append(coordinates)
-
-
-        pythonSucks = True
-        if pythonSucks:
-            for claimedSet in claimed:
-                for claimedCoordinate in claimedSet:
-                    if claimedCoordinate in claimedAtLeastOnce:
-                        claimedAtLeastTwice.add(claimedCoordinate)
-                    else:
-                        claimedAtLeastOnce.add(claimedCoordinate)
-        else:
-            claimedAtLeastTwice = set.intersection(*claimed)
+            
+            for claimedCoordinate in coordinates:
+                if claimedCoordinate in claimedAtLeastOnce:
+                    claimedAtLeastTwice.add(claimedCoordinate)
+                else:
+                    claimedAtLeastOnce.add(claimedCoordinate)
 
         print("Number of inches, that were claimed more than once: %s" % len(claimedAtLeastTwice))
 
