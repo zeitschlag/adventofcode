@@ -3,10 +3,6 @@ import re
 class Claim:
 
     def __init__(self, line):
-        self.x = 0
-        self.y = 0
-        self.height = 0
-        self.width = 0
 
         pattern = "^(.*?)@ (.*?),(.*?): (.*?)x(.*?)$"
         result = re.search(pattern, line)
@@ -14,8 +10,8 @@ class Claim:
         self.id = result.group(1)
         self.x = int(result.group(2))
         self.y = int(result.group(3))
-        self.height = int(result.group(5))
         self.width = int(result.group(4))
+        self.height = int(result.group(5))
 
 class ThirdDay:
 
