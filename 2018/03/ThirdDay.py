@@ -19,26 +19,32 @@ class ThirdDay:
         # read input files like before.
         lines = open(inputFilePath, "r").read().split("\n")
         claimed = list()
-        claimedAtLeastTwice = 0
+        claimedAtLeastOnce = set()
+        claimedAtLeastTwice = set()
 
-        
         for line in lines:
             claim = Claim(line)
-#            import pdb; pdb.set_trace()
-            print("Getting claims for %s, claimedatLeastTwice so far %s" % (claim.id, claimedAtLeastTwice))
             x = claim.x
             y = claim.y
             width = claim.width
             height = claim.height
 
             coordinates = self.createCoordinates(x, y, width, height)
-            for coordinate in coordinates:
-                if coordinate in claimed:
-                    claimedAtLeastTwice = claimedAtLeastTwice + 1
-                else:
-                    claimed.append(coordinate)
+            claimed.append(coordinates)
 
-        print(claimedAtLeastTwice)
+
+        pythonSucks = True
+        if pythonSucks:
+            for claimedSet in claimed:
+                for claimedCoordinate in claimedSet:
+                    if claimedCoordinate in claimedAtLeastOnce:
+                        claimedAtLeastTwice.add(claimedCoordinate)
+                    else:
+                        claimedAtLeastOnce.add(claimedCoordinate)
+        else:
+            claimedAtLeastTwice = set.intersection(*claimed)
+
+        print("Number of inches, that were claimed more than once: %s" % len(claimedAtLeastTwice))
 
     def createCoordinates(self, x, y, width, height):
         coordinates = set()
