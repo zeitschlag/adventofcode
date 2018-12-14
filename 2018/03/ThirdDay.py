@@ -3,7 +3,8 @@ import re
 class Claim:
 
     def __init__(self, line):
-
+        #  #ID @ distanceFromLeft,distanceFromTop: width x height
+        # id @ x, y, width x height
         pattern = "^(.*?)@ (.*?),(.*?): (.*?)x(.*?)$"
         result = re.search(pattern, line)
         
@@ -25,7 +26,9 @@ class Claim:
 class ThirdDay:
 
     def firstPart(self, inputFilePath):
-        # read input files like before.
+        # I have a bunch of claims and I need the overlapping points
+        # I calculate the coordinates for each suit and check, if they're already in the set
+        # In the end, I just count those in the set
         lines = open(inputFilePath, "r").read().split("\n")
 
         claimedAtLeastOnce = set()
@@ -49,21 +52,6 @@ class ThirdDay:
         print("Number of inches, that were claimed more than once: %s" % len(claimedAtLeastTwice))
 
 
-#  #ID @ distanceFromLeft,distanceFromTop: width x height
-# id @ x, y, width x height
-#  #123 @ 3,2: 5x4
-
-# I want a structure with ID, distanceFromLeft, distanceFromTop, width, height
-# I could use a regex-based parser to read the raw-data
-# I have a bunch of claims and I need the overlapping points
-# build claimed territory
-# check for each point, if its already claimed. If yes: make an x. if no: claim it
-
-# I could use a set, which handles the coordinates
-# alreadyClaimedCoordinates = intersection(allSets)
-
-# I calculate the coordinates for each suit and check, if they're already in the set
-# In the end, I just count those in the set
 
 if __name__ == "__main__":
     thirdDay = ThirdDay()
