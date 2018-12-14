@@ -4,7 +4,7 @@ from ThirdDay import *
 class UnitTests(unittest.TestCase):
 
     def setUp(self):
-        self.sut = ThirdDay()
+        self.sut = Claim("#6 @ 868,833: 18x20")
 
     def test_createCoordinatesSingle(self):
 

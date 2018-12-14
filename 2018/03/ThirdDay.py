@@ -13,12 +13,21 @@ class Claim:
         self.width = int(result.group(4))
         self.height = int(result.group(5))
 
+    def createCoordinates(self, x, y, width, height):
+        coordinates = set()
+        for i in range(x, x+width):
+            for j in range(y, y+height):
+                coordinates.add(str(i) + "," + str(j))
+        
+        return coordinates
+
+
 class ThirdDay:
 
     def firstPart(self, inputFilePath):
         # read input files like before.
         lines = open(inputFilePath, "r").read().split("\n")
-        claimed = list()
+
         claimedAtLeastOnce = set()
         claimedAtLeastTwice = set()
 
@@ -29,9 +38,8 @@ class ThirdDay:
             width = claim.width
             height = claim.height
 
-            coordinates = self.createCoordinates(x, y, width, height)
-            claimed.append(coordinates)
-            
+            coordinates = claim.createCoordinates(x, y, width, height)
+           
             for claimedCoordinate in coordinates:
                 if claimedCoordinate in claimedAtLeastOnce:
                     claimedAtLeastTwice.add(claimedCoordinate)
@@ -40,13 +48,6 @@ class ThirdDay:
 
         print("Number of inches, that were claimed more than once: %s" % len(claimedAtLeastTwice))
 
-    def createCoordinates(self, x, y, width, height):
-        coordinates = set()
-        for i in range(x, x+width):
-            for j in range(y, y+height):
-                coordinates.add(str(i) + "," + str(j))
-        
-        return coordinates
 
 #  #ID @ distanceFromLeft,distanceFromTop: width x height
 # id @ x, y, width x height
