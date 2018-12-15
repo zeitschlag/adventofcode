@@ -52,8 +52,37 @@ class ThirdDay:
 
         print("Number of inches, that were claimed more than once: %s" % len(claimedAtLeastTwice))
 
+    def secondPart(self, inputFilePath):
+        # second part
+        # I need to find the ID of the claim, that got claimed only once
+        lines = open(inputFilePath, "r").read().split("\n")
+        allClaimIDs = set()
+        claims = list()
+        claimsComparison = list()
 
+        # so I create the claims first
+        for line in lines:
+            claim = Claim(line)
+            allClaimIDs.add(claim.id)
+            claims.append(claim)
+            claimsComparison.append(claim)
+
+        # afterwards, I compare every claim with every claim...
+        for claimA in claims:
+            for claimB in claimsComparison:
+
+                # ... except identical ones ...
+                if claimA.id is claimB.id:
+                    continue
+
+                # to filter out those which overlap
+                if len(claimA.coordinates.intersection(claimB.coordinates)) > 0:
+                    allClaimIDs.discard(claimA.id)
+                    allClaimIDs.discard(claimB.id)
+
+        print("Claims, that do not overlap with other claims: %s" % allClaimIDs)
 
 if __name__ == "__main__":
     thirdDay = ThirdDay()
     thirdDay.firstPart("input.txt")
+    thirdDay.secondPart("input.txt")
