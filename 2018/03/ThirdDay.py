@@ -5,9 +5,9 @@ class Claim:
     def __init__(self, line):
         #  #ID @ distanceFromLeft,distanceFromTop: width x height
         # id @ x, y, width x height
-        pattern = "^(.*?)@ (.*?),(.*?): (.*?)x(.*?)$"
+        pattern = "^(.*?) @ (.*?),(.*?): (.*?)x(.*?)$"
         result = re.search(pattern, line)
-        
+
         self.id = result.group(1)
         self.x = int(result.group(2))
         self.y = int(result.group(3))
@@ -19,9 +19,8 @@ class Claim:
         for i in range(x, x+width):
             for j in range(y, y+height):
                 coordinates.add(str(i) + "," + str(j))
-        
-        return coordinates
 
+        return coordinates
 
 class ThirdDay:
 
@@ -42,7 +41,7 @@ class ThirdDay:
             height = claim.height
 
             coordinates = claim.createCoordinates(x, y, width, height)
-           
+
             for claimedCoordinate in coordinates:
                 if claimedCoordinate in claimedAtLeastOnce:
                     claimedAtLeastTwice.add(claimedCoordinate)
