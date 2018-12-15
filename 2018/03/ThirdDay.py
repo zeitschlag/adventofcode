@@ -13,14 +13,16 @@ class Claim:
         self.y = int(result.group(3))
         self.width = int(result.group(4))
         self.height = int(result.group(5))
+        self.coordinates = self.createCoordinates(self.x, self.y, self.width, self.height)
 
     def createCoordinates(self, x, y, width, height):
-        coordinates = set()
+        calculatedCoordinates = set()
         for i in range(x, x+width):
             for j in range(y, y+height):
-                coordinates.add(str(i) + "," + str(j))
+                calculatedCoordinates.add(str(i) + "," + str(j))
 
-        return coordinates
+        self.coordinates = calculatedCoordinates
+        return calculatedCoordinates
 
 class ThirdDay:
 
