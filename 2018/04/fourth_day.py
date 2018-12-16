@@ -5,6 +5,24 @@ class Guard:
     def __init__(self):
         self.sleep_phases = list()
 
+    def get_number_of_most_sleepy_minute(self):
+        sleepy_minutes = dict()
+        # count minutes
+        for sleep_phase in self.sleep_phases:
+            for sleepy_minute in sleep_phase.sleepy_minutes():
+                if sleepy_minute.minute in sleepy_minutes:
+                    sleepy_minutes[sleepy_minute.minute] += 1
+                else:
+                    sleepy_minutes[sleepy_minute.minute] = 1
+
+        # find most sleepy minute
+        amount_of_most_sleepy_minute = 0
+        for sleepy_minute in sleepy_minutes:
+            if sleepy_minutes[sleepy_minute] > amount_of_most_sleepy_minute :
+                amount_of_most_sleepy_minute = sleepy_minutes[sleepy_minute]
+
+        return amount_of_most_sleepy_minute
+
     def find_most_sleepy_minute(self):
         sleepy_minutes = dict()
         # count minutes
@@ -140,13 +158,72 @@ class FourthDay:
                     current_guard.sleep_phases.append(sleep_phase)
                     current_asleep_datetime = None
 
-
         most_sleepy_guard = self.find_most_sleepy_guard(all_guards)
         # find most sleepy minute for this guard
         most_sleepy_minute = most_sleepy_guard.find_most_sleepy_minute()
         # multiply guard-id with their most sleepy minute
 
         print("Result for first puzzle of fourth day: %s * %s = %s" % (most_sleepy_guard.guard_id, most_sleepy_minute, int(most_sleepy_guard.guard_id) * int(most_sleepy_minute)))
+
+    def second_part(self, input_file_path):
+        # Of all guards, which guard is most frequently asleep on the same minute?
+        lines = open(input_file_path, "r").read().split("\n")
+        all_events = list()
+        all_guards = dict()
+
+        # read input
+        for line in lines:
+            event = Event(line=line)
+            all_events.append(event)
+
+        # order input
+        sorted_events = sorted(all_events, key=lambda event: event.datetime, reverse=False)
+
+        current_asleep_datetime = None
+        current_guard = None
+        for event in sorted_events:
+            changed_guard = event.get_guard()
+
+            if changed_guard is not None:
+                if changed_guard.guard_id in all_guards:
+                    changed_guard = all_guards[changed_guard.guard_id]
+                else:
+                    all_guards[changed_guard.guard_id] = changed_guard
+
+                current_guard = changed_guard
+
+            if current_guard is not None:
+                sleep_time = event.get_sleep_time()
+                if sleep_time is not None:
+                    current_asleep_datetime = sleep_time
+
+                wakeup_time = event.get_wakeup_time()
+                if wakeup_time is not None:
+                    sleep_phase = SleepPhase(start=current_asleep_datetime, end=wakeup_time)
+
+                    if current_guard.sleep_phases is None:
+                        current_guard.sleep_phases = list()
+
+                    current_guard.sleep_phases.append(sleep_phase)
+                    current_asleep_datetime = None
+
+        most_sleepy_guard = None
+        most_sleepy_minute = 0
+        number_of_most_sleepy_minute = 0
+        for guard_id in all_guards:
+            guard = all_guards[guard_id]
+
+            current_sleepy_minute = guard.find_most_sleepy_minute()
+            number_of_sleepy_minute = guard.get_number_of_most_sleepy_minute()
+
+            print("Guard #%s: sleeps most often at %s, %s times" % (guard.guard_id, current_sleepy_minute, number_of_sleepy_minute))
+
+            if number_of_sleepy_minute > number_of_most_sleepy_minute:
+                number_of_most_sleepy_minute = number_of_sleepy_minute
+                most_sleepy_minute = current_sleepy_minute
+                most_sleepy_guard = guard
+
+        print("Result for second puzzle of fourth day: %s * %s = %s" % (most_sleepy_guard.guard_id, most_sleepy_minute, int(most_sleepy_guard.guard_id) * int(most_sleepy_minute)))
 
     def find_most_sleepy_guard(self, all_guards):
 
@@ -170,3 +247,4 @@ class FourthDay:
 if __name__ == "__main__":
     fourth_day = FourthDay()
     fourth_day.first_part("input.txt")
+    fourth_day.second_part("input.txt")
