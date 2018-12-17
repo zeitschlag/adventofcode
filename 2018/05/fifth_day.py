@@ -4,35 +4,50 @@ import string
 
 def first_puzzle(input_file_path):
 
-    content_of_file = open(input_file_path, "r").read()
-    unpolarity_found = True
+    polymer = open(input_file_path, "r").read()
     regexlist = list()
+    reaction_pattern = get_full_reaction_pattern()
+    polymer = fully_react(polymer=polymer, pattern=reaction_pattern)
+    print("Length of the polymer is %s" % (len(polymer)))
 
-    for i in string.ascii_lowercase:
-        for j in string.ascii_uppercase:
-            if i.lower() == j.lower():
-                regexlist.append("%s%s" % (i, j))
-                regexlist.append("%s%s" % (j, i))
 
-    pattern = "|".join(regexlist)
-    pattern = "(" + pattern + ")"
+def second_puzzle(input_file_path):
+    polymer = open(input_file_path, "r").read()
+    shortest_polymer = len(polymer)
+    shortest_polymer_pattern = None
+    reaction_pattern = get_full_reaction_pattern()
 
+    for lowercase in string.ascii_lowercase:
+        polymer = open(input_file_path, "r").read()
+        pattern = "(%s|%s)" % (lowercase, lowercase.upper())
+
+        # remove all letters of one kind
+        polymer = fully_react(polymer=polymer, pattern=pattern)
+        # do the usual reaction-thing
+        polymer = fully_react(polymer=polymer, pattern=reaction_pattern)
+
+        if len(polymer) < shortest_polymer:
+            shortest_polymer = len(polymer)
+            shortest_polymer_pattern = pattern
+
+    print("Length of shortest polymer: %s (Pattern: %s)" % (shortest_polymer, shortest_polymer_pattern))
+
+
+def fully_react(polymer, pattern):
+    unpolarity_found = True
     while unpolarity_found:
-        result = re.search(pattern=pattern, string=content_of_file)
+        result = re.search(pattern=pattern, string=polymer)
 
         if result:
             for group in result.groups():
-                content_of_file = content_of_file.replace(group, "")
+                polymer = polymer.replace(group, "")
         else:
             unpolarity_found = False
+    return polymer
 
-    print("Length of the polymer is %s" % (len(content_of_file)))
 
-def second_puzzle(input_file_path):
-    content_of_file = open(input_file_path, "r").read()
-    shortest_polymer = len(content_of_file)
+def get_full_reaction_pattern():
     reaction_regex_list = list()
-
     for i in string.ascii_lowercase:
         for j in string.ascii_uppercase:
             if i.lower() == j.lower():
@@ -42,37 +57,7 @@ def second_puzzle(input_file_path):
     reaction_pattern = "|".join(reaction_regex_list)
     reaction_pattern = "(" + reaction_pattern + ")"
 
-    for lowercase in string.ascii_lowercase:
-        UPPERCASE = lowercase.upper()
-
-        content_of_file = open(input_file_path, "r").read()
-        pattern = "(%s|%s)" % (lowercase, UPPERCASE)
-
-        # remove all letters of one kind
-        all_letters_replaced = True
-        while all_letters_replaced:
-            result = re.search(pattern=pattern, string=content_of_file)
-            if result:
-                for group in result.groups():
-                    content_of_file = content_of_file.replace(group, "")
-            else:
-                all_letters_replaced = False
-
-        # do the usual reaction-thing
-        unpolarity_found = True
-        while unpolarity_found:
-            result = re.search(pattern=reaction_pattern, string=content_of_file)
-
-            if result:
-                for group in result.groups():
-                    content_of_file = content_of_file.replace(group, "")
-            else:
-                unpolarity_found = False
-
-        if len(content_of_file) < shortest_polymer:
-            shortest_polymer = len(content_of_file)
-
-    print("Length of shortest polymer: %s" % (shortest_polymer))
+    return reaction_pattern
 
 
 if __name__ == "__main__":
