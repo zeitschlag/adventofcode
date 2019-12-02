@@ -1,22 +1,16 @@
-def first_puzzle
-  positions = IO.read("input.txt").split(",")
-  
-  # 1202 program alarm
-  puts "applying 1202 program alarm..."
-  positions[1] = 12
-  positions[2] = 2
+def run_intcode(input)
   
   puts "begin calculation..."
   
-  0.step(positions.count, 4) { |i|
-    opcode = Integer(positions[i])
+  0.step(input.count, 4) { |i|
+    opcode = Integer(input[i])
     
-    first_input_index = Integer(positions[i+1])
-    first_input_value = Integer(positions[first_input_index])
+    first_input_index = Integer(input[i+1])
+    first_input_value = Integer(input[first_input_index])
     
-    second_input_index = Integer(positions[i+2])
-    second_input_value = Integer(positions[second_input_index])
-    output_index = Integer(positions[i+3])
+    second_input_index = Integer(input[i+2])
+    second_input_value = Integer(input[second_input_index])
+    output_index = Integer(input[i+3])
     
     if opcode == 99
       break
@@ -25,14 +19,24 @@ def first_puzzle
     elsif opcode == 2
       result = first_input_value * second_input_value
     else
-      puts "Weird opcode (#{opcode}), aborting..."
+      puts "Weird opcode (#{opcode} at #{i}), aborting..."
     end
     
-    positions[output_index] = result
+    input[output_index] = result
   
   }
+
+  return Integer(input[0])
   
-  puts "calculation ended. value at position 0: #{positions[0]}"
 end
 
+def first_puzzle 
+  positions = IO.read("input.txt").split(",")
+  puts "applying 1202 program alarm..."
+  positions[1] = 12
+  positions[2] = 2
+  result = run_intcode(positions) 
+  
+  puts "calculation ended. value at position 0: #{result}"
+end
 
