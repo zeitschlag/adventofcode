@@ -40,3 +40,26 @@ def first_puzzle
   puts "calculation ended. value at position 0: #{result}"
 end
 
+def second_puzzle
+  working_intcode = IO.read("input.txt").split(",")
+
+  for noun in 0..100
+    for verb in 0..100
+      working_intcode[1] = noun
+      working_intcode[2] = verb
+      result = run_intcode(working_intcode)
+      
+      if result == 19690720
+        puts "Ha! noun is #{noun} and verb is #{verb}, that means: The answer is #{noun * 100 + verb}"
+        return 
+      else
+        # reset code
+        puts "resetting intcode"
+        working_intcode = IO.read("input.txt").split(",")
+      end
+    end
+  end
+  
+end
+
+second_puzzle
