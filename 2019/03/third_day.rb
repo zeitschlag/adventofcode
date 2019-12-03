@@ -1,11 +1,14 @@
 class Coordinate
+
+  attr_reader :x, :y
+
   def initialize(x, y)
     @x = x
     @y = y
   end
 
   def calculate_manhattan_distance(other_point)
-    return Math.abs(self.x - other_point.x) + Math.abs(self.y - other_point.y)
+    return (@x - other_point.x).abs + (@y - other_point.y).abs
   end
 
 end
