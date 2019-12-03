@@ -12,6 +12,10 @@ class Coordinate
   def calculate_manhattan_distance(other_point)
     return (@x - other_point.x).abs + (@y - other_point.y).abs
   end
+  
+  def ==(other_object)
+    return @x == other_object.x && @y == other_object.y
+  end
 
 end
 
