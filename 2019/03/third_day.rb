@@ -1,3 +1,29 @@
+class Coordinate
+  def initialize(x, y)
+    @x = x
+    @y = y
+  end
+
+  def calculate_manhattan_distance(other_point)
+    return Math.abs(self.x - other_point.x) + Math.abs(self.y - other_point.y)
+  end
+
+end
+
+class Path
+  def initialize(central_port, instructions)
+    @central_port = central_port
+
+    @points = get_coordinates_from_instructions(instructions)
+  end
+
+  def get_coordinates_from_instructions(instructions)
+    return [Coordinate.new(1, 1)]
+  end
+end
+
+central_port = Coordinate.new(x=0, y=0)
+
 # first idea:
 # central port: 0, 0
 # read wire-paths, each path is in one line
