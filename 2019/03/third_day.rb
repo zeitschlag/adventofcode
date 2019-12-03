@@ -62,30 +62,34 @@ class Wire_Path
   end
 end
 
-central_port = Coordinate.new(x=0, y=0)
-
-wire_instructions = IO.read("input.txt").split("\n")
-wire_paths = []
-
-for wire_instruction in wire_instructions do
-  wire_path = Wire_Path.new(central_port, wire_instruction)
-  wire_paths.append(wire_path)
-end
-
-for i in wire_paths do
-  for j in wire_paths do
-    
-    if i == j
-      next
-    end
-    
-    for i_coordinate in i.coordinates do
-      for j_coordinate in j.coordinates do
-        
-        if i_coordinate == j_coordinate
-          puts "Cross at (#{i_coordinate.x}, #{i_coordinate.y}), distance is #{i_coordinate.calculate_manhattan_distance(central_port)}"
+def first_puzzle
+  central_port = Coordinate.new(x=0, y=0)
+  
+  wire_instructions = IO.read("input.txt").split("\n")
+  wire_paths = []
+  
+  for wire_instruction in wire_instructions do
+    wire_path = Wire_Path.new(central_port, wire_instruction)
+    wire_paths.append(wire_path)
+  end
+  
+  for i in wire_paths do
+    for j in wire_paths do
+      
+      if i == j
+        next
+      end
+      
+      for i_coordinate in i.coordinates do
+        for j_coordinate in j.coordinates do
+          
+          if i_coordinate == j_coordinate
+            puts "Cross at (#{i_coordinate.x}, #{i_coordinate.y}), distance is #{i_coordinate.calculate_manhattan_distance(central_port)}"
+          end
         end
       end
     end
   end
 end
+
+first_puzzle
