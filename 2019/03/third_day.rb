@@ -30,6 +30,7 @@ class Wire_Path
   def initialize(starting_point, instructions)
     @starting_point = starting_point
     @coordinates = get_coordinates_from_instructions(instructions)
+    @sorted_coordinates = get_coordinates_list_from_instructions(instructions)
   end
 
   def get_coordinates_from_instructions(instructions)
@@ -64,6 +65,54 @@ class Wire_Path
   
     return all_points
   end
+  
+  def get_coordinates_list_from_instructions(instructions)
+    current_point = @starting_point
+    instruction_list = instructions.split(",")
+    all_points = Array[]
+      
+    instruction_list.each do |instruction|
+      direction = instruction[0]
+      length = Integer(instruction[1..-1])
+      
+      dx = 0
+      dy = 0
+                
+      if direction == "R"
+        dx = 1
+      elsif direction == "L"  
+        dx = -1
+      elsif direction == "U"
+        dy = 1
+      elsif direction == "D"
+        dy = -1
+      end
+      
+      for i in 0...length do
+        new_point = Coordinate.new(x=current_point.x+dx, y=current_point.y+dy)
+        all_points.append(new_point)
+        current_point = new_point
+      end
+    end
+  
+    return all_points
+  end
+  
+  def get_coordinates_until_intersection(intersection)
+    coordinates = []
+    
+    for coordinate in @sorted_coordinates do
+      if coordinate.x == intersection.x && coordinate.y == intersection.y
+        coordinates.append(coordinate)
+        break
+      else
+        coordinates.append(coordinate)
+      end
+    end
+
+    return coordinates
+  end
+  
 end
 
 def first_puzzle
