@@ -13,8 +13,12 @@ class Coordinate
     return (@x - other_point.x).abs + (@y - other_point.y).abs
   end
   
-  def ==(other_object)
+  def eql?(other_object)
     return @x == other_object.x && @y == other_object.y
+  end
+  
+  def hash
+    return [@x, @y].hash
   end
 
 end
@@ -31,7 +35,7 @@ class Wire_Path
   def get_coordinates_from_instructions(instructions)
     current_point = @starting_point
     instruction_list = instructions.split(",")
-    all_points = Set[current_point]
+    all_points = Set[]
       
     instruction_list.each do |instruction|
       direction = instruction[0]
@@ -73,23 +77,27 @@ def first_puzzle
     wire_paths.append(wire_path)
   end
   
+  intersections = Set[]
+  
   for i in wire_paths do
     for j in wire_paths do
       
       if i == j
         next
       end
-      
-      for i_coordinate in i.coordinates do
-        for j_coordinate in j.coordinates do
-          
-          if i_coordinate == j_coordinate
-            puts "Cross at (#{i_coordinate.x}, #{i_coordinate.y}), distance is #{i_coordinate.calculate_manhattan_distance(central_port)}"
-          end
-        end
+        
+      intersection = (i.coordinates & j.coordinates)
+      intersection.each do |i|
+        intersections.add(i)
       end
     end
   end
+
+  distance_of_closest_intersection = intersections.min { |a, b|
+    a.calculate_manhattan_distance(central_port) <=> b.calculate_manhattan_distance(central_port)
+  }
+  
+  puts "distance of closest intersection is #{distance_of_closest_intersection.calculate_manhattan_distance(central_port)}"
 end
 
 first_puzzle
