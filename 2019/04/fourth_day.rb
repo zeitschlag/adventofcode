@@ -5,9 +5,13 @@ def is_number_potential_password?(number)
   # two adjacent digits are the same
   two_adjacent_digits = false
   number_string = number.to_s
-  if number_string[0] == number_string[1] || number_string[1] == number_string[2] || number_string[2] == number_string[3] || number_string[3] == number_string[4] || number_string[4] == number_string[5]
-    two_adjacent_digits = true
-  end
+  
+  number_string.chars.each_cons(2) { |two_digits|
+  	if two_digits[0] == two_digits[1]
+  	  two_adjacent_digits = true
+  	end
+  }
+
   # digits never decrease. Sort and compare if strings are the same
   never_decrease = number.to_s.chars.sort == number.to_s.chars
 
