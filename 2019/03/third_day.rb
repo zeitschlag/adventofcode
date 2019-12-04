@@ -147,6 +147,54 @@ def first_puzzle
   }
   
   puts "distance of closest intersection is #{distance_of_closest_intersection.calculate_manhattan_distance(central_port)}"
+
 end
 
-first_puzzle
+def second_puzzle
+  central_port = Coordinate.new(x=0, y=0)
+  
+  wire_instructions = IO.read("input.txt").split("\n")
+  wire_paths = []
+  
+  for wire_instruction in wire_instructions do
+    wire_path = Wire_Path.new(central_port, wire_instruction)
+    wire_paths.append(wire_path)
+  end
+  
+  intersections = Set[]
+  
+  for i in wire_paths do
+    for j in wire_paths do
+      
+      if i == j
+        next
+      end
+        
+      intersection = (i.coordinates & j.coordinates)
+      intersection.each do |i|
+        intersections.add(i)
+      end
+    end
+  end
+    
+  # count steps
+  steps_until_intersection = []
+  for intersection in intersections do
+    for i in wire_paths do
+      for j in wire_paths do
+        if i == j
+          next
+        end
+        
+        combined_intersection_steps = i.get_coordinates_until_intersection(intersection).length + j.get_coordinates_until_intersection(intersection).length
+        steps_until_intersection.append(combined_intersection_steps)
+      end
+    end
+  end
+  
+  min_steps = steps_until_intersection.min {|a, b| a <=> b}
+  puts "Minimal steps are #{min_steps}"
+  
+end
+
+second_puzzle
