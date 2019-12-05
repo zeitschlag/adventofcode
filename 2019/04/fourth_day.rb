@@ -1,3 +1,19 @@
+require 'minitest/autorun'
+
+class PasswordValidationTests < Minitest::Test
+  def test_is_number_potential_password_111111
+    assert is_number_potential_password?(111111)
+    end
+  
+  def test_is_number_potential_password_223450
+    assert_equal is_number_potential_password?(223450), false
+  end
+  
+  def test_is_number_potential_password_123789    
+    assert_equal is_number_potential_password?(123789), false
+  end
+end
+
 def is_number_potential_password?(number)
   # has six digits
   has_six_digits = number.to_s.length == 6
@@ -35,6 +51,8 @@ def first_puzzle
   puts "1. Potential Passwords: #{potential_passwords.length}"
 end
 
+first_puzzle
+
 def second_puzzle
 
   potential_passwords = []
@@ -45,9 +63,5 @@ def second_puzzle
 	end
   }
   
-  
   puts "2. Potential Passwords: #{potential_passwords.length}"
-
 end
-
-first_puzzle
