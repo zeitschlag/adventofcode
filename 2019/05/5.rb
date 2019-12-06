@@ -1,7 +1,7 @@
 POSITIONMODE = "0"
 IMMEDIATEMODE = "1"
 
-def get_first_input_value(command, intcode, index)
+def get_first_parameter_value(command, intcode, index)
   first_input_index = Integer(intcode[index+1])
   first_param_index_mode = command[-3]
 
@@ -14,7 +14,7 @@ def get_first_input_value(command, intcode, index)
   return first_input_value
 end
 
-def get_second_input_value(command, intcode, index)
+def get_second_parameter_value(command, intcode, index)
   second_input_index = Integer(intcode[index+2])
   second_param_index_mode = command[-4]
   
@@ -46,8 +46,8 @@ def run_intcode(input)
       
     elsif opcode == :add
         
-      first_input_value = get_first_input_value(command, input, i)
-	  second_input_value = get_second_input_value(command, input, i)
+      first_input_value = get_first_parameter_value(command, input, i)
+	  second_input_value = get_second_parameter_value(command, input, i)
       
       output_index = Integer(input[i+3])
       third_param_index_mode = command[-5]
@@ -62,8 +62,8 @@ def run_intcode(input)
       
     elsif opcode == :multiply
 
-      first_input_value = get_first_input_value(command, input, i)
-      second_input_value = get_second_input_value(command, input, i)
+      first_input_value = get_first_parameter_value(command, input, i)
+      second_input_value = get_second_parameter_value(command, input, i)
       
       output_index = Integer(input[i+3])
       third_param_index_mode = command[-5]
