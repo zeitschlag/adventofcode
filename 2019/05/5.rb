@@ -106,6 +106,14 @@ def get_opcode_for_command(command)
     return :read
   elsif /4$/ =~ command
     return :write
+  elsif /5$/ =~ command
+  	return :jump_if_true
+  elsif /6$/ =~ command
+    return :jump_if_false
+  elsif /7$/ =~ command
+    return :less_than
+  elsif /8$/ =~ command
+    return :equals
   elsif /^99$/ =~ command
     return :halt
   end
@@ -114,8 +122,10 @@ end
 def number_of_parameters_for_opcode(opcode)
   if opcode == :halt
     return 0
-  elsif opcode == :add || opcode == :multiply
+  elsif opcode == :add || opcode == :multiply || opcode == :less_than || opcode == :equals
     return 3
+  elsif opcode == :jump_if_false || opcode == :jump_if_true
+    return 2
   elsif opcode == :read || opcode == :write
     return 1
   end
