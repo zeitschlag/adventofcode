@@ -1,8 +1,34 @@
-def run_intcode(input)
+POSITIONMODE = "0"
+IMMEDIATEMODE = "1"
 
-  position_mode = "0"
-  immediate_mode = "1"
-   
+def get_first_input_value(command, intcode, index)
+  first_input_index = Integer(intcode[index+1])
+  first_param_index_mode = command[-3]
+
+  if first_param_index_mode == IMMEDIATEMODE
+    first_input_value = first_input_index
+  else
+	first_input_value = Integer(intcode[first_input_index])
+  end
+  
+  return first_input_value
+end
+
+def get_second_input_value(command, intcode, index)
+  second_input_index = Integer(intcode[index+2])
+  second_param_index_mode = command[-4]
+  
+  if second_param_index_mode == IMMEDIATEMODE
+    second_input_value = second_input_index
+  else
+    second_input_value = Integer(intcode[second_input_index])
+  end
+  
+  return second_input_value
+end
+
+def run_intcode(input)
+  
   i = 0 
   loop do
   
@@ -12,37 +38,20 @@ def run_intcode(input)
   	
   	command = input[i]
     opcode = get_opcode_for_command(command.to_s)
-
-    # check each parameter for being direct input or address
-        
+       
     if opcode == :halt
       
       puts "End Program"
       break
       
     elsif opcode == :add
-    
-      first_input_index = Integer(input[i+1])
-      first_param_index_mode = command[-3]
-      
-      if first_param_index_mode == immediate_mode
-        first_input_value = first_input_index
-      else
-        first_input_value = Integer(input[first_input_index])
-      end
-
-      second_input_index = Integer(input[i+2])
-      second_param_index_mode = command[-4]
-      
-      if second_param_index_mode == immediate_mode
-        second_input_value = second_input_index
-      else
-        second_input_value = Integer(input[second_input_index])
-      end
+        
+      first_input_value = get_first_input_value(command, input, i)
+	  second_input_value = get_second_input_value(command, input, i)
       
       output_index = Integer(input[i+3])
       third_param_index_mode = command[-5]
-      if third_param_index_mode == immediate_mode
+      if third_param_index_mode == IMMEDIATEMODE
       	output_value = output_index
       else
         output_value = Integer(input[output_index])
@@ -53,27 +62,12 @@ def run_intcode(input)
       
     elsif opcode == :multiply
 
-      first_input_index = Integer(input[i+1])
-      first_param_index_mode = command[-3]
-      
-      if first_param_index_mode == immediate_mode
-        first_input_value = first_input_index
-      else
-        first_input_value = Integer(input[first_input_index])
-      end
-
-      second_input_index = Integer(input[i+2])
-      second_param_index_mode = command[-4]
-      
-      if second_param_index_mode == immediate_mode
-        second_input_value = second_input_index
-      else
-        second_input_value = Integer(input[second_input_index])
-      end
+      first_input_value = get_first_input_value(command, input, i)
+      second_input_value = get_second_input_value(command, input, i)
       
       output_index = Integer(input[i+3])
       third_param_index_mode = command[-5]
-      if third_param_index_mode == immediate_mode
+      if third_param_index_mode == IMMEDIATEMODE
       	output_value = output_index
       else
         output_value = Integer(input[output_index])
@@ -83,15 +77,6 @@ def run_intcode(input)
       input[output_index] = result
 
     elsif opcode == :read
-
-      first_input_index = Integer(input[i+1])
-      first_param_index_mode = command[-3]
-      
-      if first_param_index_mode == immediate_mode
-        first_input_value = first_input_index
-      else
-        first_input_value = Integer(input[first_input_index])
-      end
 
       first_input_value = Integer(input[i+1])
       input[first_input_value] = 1 # first input value, this is a dirty hack
@@ -140,7 +125,5 @@ def first_puzzle
   intcode = IO.read("input.txt").split(",")
   result = run_intcode(intcode) 
 end
-
-# get opcode: i.to_s[-2, 2]
 
 first_puzzle
