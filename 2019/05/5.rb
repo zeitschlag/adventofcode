@@ -29,15 +29,6 @@ end
 
 def get_third_parameter_value(command, intcode, index)
   output_index = Integer(intcode[index+3])
-  
-  third_param_index_mode = command[-5]
-  if third_param_index_mode == IMMEDIATEMODE
-	output_value = output_index
-  else
-    output_value = Integer(intcode[output_index])
-  end
-  
-  return output_value
 end
 
 def run_intcode(input)
@@ -45,11 +36,11 @@ def run_intcode(input)
   i = 0 
   loop do
   
-  	if i == input.length
-  	  break
-  	end
-  	
-  	command = input[i]
+    if i == input.length
+      break
+    end
+    
+    command = input[i]
     opcode = get_opcode_for_command(command.to_s)
        
     if opcode == :halt
@@ -60,19 +51,20 @@ def run_intcode(input)
     elsif opcode == :add
         
       first_input_value = get_first_parameter_value(command, input, i)
-	  second_input_value = get_second_parameter_value(command, input, i)   
+      second_input_value = get_second_parameter_value(command, input, i)   
       output_index = get_third_parameter_value(command, input, i)
       
       result = first_input_value + second_input_value
-      input[output_index] = result
+      input[output_index] = result.to_s
       
     elsif opcode == :multiply
 
       first_input_value = get_first_parameter_value(command, input, i)
       second_input_value = get_second_parameter_value(command, input, i)
+      output_index = get_third_parameter_value(command, input, i)
 
       result = first_input_value * second_input_value
-      input[output_index] = result
+      input[output_index] = result.to_s
 
     elsif opcode == :read
 
@@ -108,7 +100,7 @@ def run_intcode(input)
       output_index = Integer(input[i+3])
       
       if first_input_value < second_input_value
-      	input[output_index] = "1"
+        input[output_index] = "1"
       else
         input[output_index] = "0"
       end
@@ -125,7 +117,7 @@ def run_intcode(input)
         input[output_index] = "0"
       end
     else
-      puts "Weird opcode (#{opcode} at #{i}), aborting..."
+      puts "Weird opcode (#{opcode} at #{i}), command: #{command}, aborting..."
     end
     
     number_of_parameters = number_of_parameters_for_opcode(opcode)
