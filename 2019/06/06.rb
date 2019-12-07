@@ -24,9 +24,9 @@ class Planetary_Object
   
   def get_number_of_indirect_objects
     if @center_object
-      return @center_object.get_number_of_indirect_objects + 1
+      @center_object.get_number_of_indirect_objects + 1
     else
-      return 0
+      0
     end
   end
 end
@@ -63,7 +63,7 @@ def count_orbits(planet_map)
     indirect_orbits += planet.get_number_of_indirect_objects
   }
   
-  return direct_orbits + indirect_orbits
+  direct_orbits + indirect_orbits
 end
 
 def first_puzzle
