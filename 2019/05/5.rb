@@ -113,7 +113,7 @@ def run_intcode(input)
         input[output_index] = "0"
       end
     else
-      puts "Weird opcode (#{opcode} at #{i}), command: #{command}, aborting..."
+      raise "Weird opcode (#{opcode} at #{i}), command: #{command}, aborting..."
     end
     
     number_of_parameters = number_of_parameters_for_opcode(opcode)
