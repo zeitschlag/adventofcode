@@ -124,23 +124,23 @@ def run_intcode(input)
 end
 
 def get_opcode_for_command(command)
-  if /1$/ =~ command
+  if command.end_with?("1")
     :add
-  elsif /2$/ =~ command
+  elsif command.end_with?("2")
     :multiply
-  elsif /3$/ =~ command
+  elsif command.end_with?("3")
     :read
-  elsif /4$/ =~ command
+  elsif command.end_with?("4")
     :write
-  elsif /5$/ =~ command
+  elsif command.end_with?("5")
     :jump_if_true
-  elsif /6$/ =~ command
+  elsif command.end_with?("6")
     :jump_if_false
-  elsif /7$/ =~ command
+  elsif command.end_with?("7")
     :less_than
-  elsif /8$/ =~ command
+  elsif command.end_with?("8")
     :equals
-  elsif /^99$/ =~ command
+  elsif command.end_with?("99")
     :halt
   end
 end
