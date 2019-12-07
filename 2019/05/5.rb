@@ -6,12 +6,10 @@ def get_first_parameter_value(command, intcode, index)
   first_param_index_mode = command[-3]
 
   if first_param_index_mode == IMMEDIATEMODE
-    first_input_value = first_input_index
+    first_input_index
   else
-	first_input_value = Integer(intcode[first_input_index])
+    Integer(intcode[first_input_index])
   end
-  
-  return first_input_value
 end
 
 def get_second_parameter_value(command, intcode, index)
@@ -19,16 +17,14 @@ def get_second_parameter_value(command, intcode, index)
   second_param_index_mode = command[-4]
   
   if second_param_index_mode == IMMEDIATEMODE
-    second_input_value = second_input_index
+    second_input_index
   else
-    second_input_value = Integer(intcode[second_input_index])
+    Integer(intcode[second_input_index])
   end
-  
-  return second_input_value
 end
 
 def get_third_parameter_value(command, intcode, index)
-  output_index = Integer(intcode[index+3])
+  Integer(intcode[index+3])
 end
 
 def run_intcode(input)
@@ -129,41 +125,41 @@ end
 
 def get_opcode_for_command(command)
   if /1$/ =~ command
-    return :add
+    :add
   elsif /2$/ =~ command
-    return :multiply
+    :multiply
   elsif /3$/ =~ command
-    return :read
+    :read
   elsif /4$/ =~ command
-    return :write
+    :write
   elsif /5$/ =~ command
-  	return :jump_if_true
+    :jump_if_true
   elsif /6$/ =~ command
-    return :jump_if_false
+    :jump_if_false
   elsif /7$/ =~ command
-    return :less_than
+    :less_than
   elsif /8$/ =~ command
-    return :equals
+    :equals
   elsif /^99$/ =~ command
-    return :halt
+    :halt
   end
 end
 
 def number_of_parameters_for_opcode(opcode)
   if opcode == :halt
-    return 0
+    0
   elsif opcode == :add || opcode == :multiply || opcode == :less_than || opcode == :equals
-    return 3
+    3
   elsif opcode == :jump_if_false || opcode == :jump_if_true
-    return 2
+    2
   elsif opcode == :read || opcode == :write
-    return 1
+    1
   end
 end
 
 def first_puzzle 
   intcode = IO.read("input.txt").split(",")
-  result = run_intcode(intcode)
+  run_intcode(intcode)
 end
 
 first_puzzle
