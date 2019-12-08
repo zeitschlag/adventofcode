@@ -29,10 +29,10 @@ def get_third_parameter_value(command, intcode, index)
   Integer(intcode[index+3])
 end
 
-# take intcode, and input to
 def run_intcode(intcode, phase_setting, input_value)
   
-  i = 0 
+  i = 0
+  use_input_value = false
   loop do
   
     if i == intcode.length
@@ -68,12 +68,18 @@ def run_intcode(intcode, phase_setting, input_value)
     elsif opcode == :read
 
       first_input_value = Integer(intcode[i+1])
-      intcode[first_input_value] = 5 # first input value, this is a dirty hack. Will be modified now.
+      if use_input_value
+        read_value = input_value
+      else
+        read_value = phase_setting
+      end
+      use_input_value = true
+      intcode[first_input_value] = read_value.to_s
       
     elsif opcode == :write
     
       first_input_index = Integer(intcode[i+1])
-      puts intcode[first_input_index]
+      return Integer(intcode[first_input_index])
 
     elsif opcode == :jump_if_true
       first_input_value = get_first_parameter_value(command, intcode, i)
@@ -160,10 +166,25 @@ def number_of_parameters_for_opcode(opcode)
   end
 end
 
-def first_puzzle 
+def calculate_thrust(intcode, amplifiers)
+  max_thrust = 0
+  amplifiers.permutation { |amplifier_phase_order|
+    input = 0
+     for amplifier_phase in amplifier_phase_order do
+       thrust = run_intcode(intcode, amplifier_phase, input.to_s)
+       if thrust >= max_thrust
+         max_thrust = thrust
+       end
+       input = thrust
+     end
+  }
+  
+  max_thrust
+end
+
+def first_puzzle
   intcode = IO.read("AmplifierControllerSoftware.txt").split(",")
-  # run intcode in different input orders
-  run_intcode(intcode, 0, 0)
+  puts "max threshold: #{calculate_thrust(intcode, [0,1,2,3,4])}"
 end
 
 first_puzzle
