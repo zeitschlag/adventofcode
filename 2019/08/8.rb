@@ -1,6 +1,11 @@
 require 'minitest/autorun'
 
+IMAGE_WIDTH = 25
+IMAGE_HEIGHT = 6
+
 class Layer
+
+  attr_reader :image_data
   
   # image data = [[]]
   def initialize(image_data)
@@ -24,18 +29,50 @@ class LayerTests < MiniTest::Test
   end
 end
 
-image_data = IO.read("image_data.txt").chars
-image_width = 25
-image_height = 6
-
-layers = []
-
-for image in image_data.each_slice(image_width).each_slice(image_height) do
-  layers.append(Layer.new(image))
+def first_puzzle
+  image_data = IO.read("image_data.txt").chars
+  
+  layers = []
+  
+  for image in image_data.each_slice(IMAGE_WIDTH).each_slice(IMAGE_HEIGHT) do
+    layers.append(Layer.new(image))
+  end
+  
+  layer_with_fewest_zeros = layers.sort { |a, b| a.count("0") <=> b.count("0") }.first
+  
+  puts "0: #{layer_with_fewest_zeros.count("0")}, 1: #{layer_with_fewest_zeros.count("1") * layer_with_fewest_zeros.count("2")}"
 end
 
-layer_with_fewest_zeros = layers.sort { |a, b| a.count("0") <=> b.count("0") }.first
+def second_puzzle
+  image_data = IO.read("image_data.txt").chars
+  
+  layers = []
+  
+  for image in image_data.each_slice(IMAGE_WIDTH).each_slice(IMAGE_HEIGHT) do
+    layers.append(Layer.new(image))
+  end
+  
+  for i in 0..IMAGE_HEIGHT do
+    for j in 0..IMAGE_WIDTH do
+      for layer in layers do
+        if layer.image_data[i][j] != "2"
+          putc layer.image_data[i][j]
+          break
+        end
+      end
+    end
+    putc "\n"
+  end
+    
+    
+  # if pixel == 2: look in the next layer
+  # else: return color
+  
+end
 
-puts "0: #{layer_with_fewest_zeros.count("0")}, 1: #{layer_with_fewest_zeros.count("1") * layer_with_fewest_zeros.count("2")}"
+second_puzzle
 
-
+# 0 is black
+# 1 is white
+# 2 is transparent
+# print first visible 
