@@ -53,10 +53,10 @@ def second_puzzle
   layers = create_layers()
   
   puts "decoded image:"
-  for i in 0...IMAGE_HEIGHT do
-    for j in 0...IMAGE_WIDTH do
+  (0...IMAGE_HEIGHT).each { |height_index|
+    (0...IMAGE_WIDTH).each { |width_index|
       for layer in layers do
-        pixel = layer.image_data[i][j]
+        pixel = layer.image_data[height_index][width_index]
         if pixel == "1"
           # 1 is white
           putc "#"
@@ -67,9 +67,9 @@ def second_puzzle
           break
         end
       end
-    end
+    }
     putc "\n"
-  end
+  }
 end
 
 first_puzzle
