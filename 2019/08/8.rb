@@ -29,7 +29,7 @@ class LayerTests < MiniTest::Test
   end
 end
 
-def first_puzzle
+def create_layers
   image_data = IO.read("image_data.txt").chars
   
   layers = []
@@ -38,41 +38,40 @@ def first_puzzle
     layers.append(Layer.new(image))
   end
   
+  layers
+
+end
+
+def first_puzzle
+  layers = create_layers()  
   layer_with_fewest_zeros = layers.sort { |a, b| a.count("0") <=> b.count("0") }.first
   
-  puts "0: #{layer_with_fewest_zeros.count("0")}, 1: #{layer_with_fewest_zeros.count("1") * layer_with_fewest_zeros.count("2")}"
+  puts "Fewest Zeros: #{layer_with_fewest_zeros.count("0")}, number(1)*number(2) #{layer_with_fewest_zeros.count("1") * layer_with_fewest_zeros.count("2")}"
 end
 
 def second_puzzle
-  image_data = IO.read("image_data.txt").chars
+  layers = create_layers()
   
-  layers = []
-  
-  for image in image_data.each_slice(IMAGE_WIDTH).each_slice(IMAGE_HEIGHT) do
-    layers.append(Layer.new(image))
-  end
-  
-  for i in 0..IMAGE_HEIGHT do
-    for j in 0..IMAGE_WIDTH do
+  puts "decoded image:"
+  for i in 0...IMAGE_HEIGHT do
+    for j in 0...IMAGE_WIDTH do
       for layer in layers do
-        if layer.image_data[i][j] != "2"
-          putc layer.image_data[i][j]
+        pixel = layer.image_data[i][j]
+        if pixel == "1"
+          # 1 is white
+          putc "#"
+          break
+        elsif pixel == "0"
+          # 0 is black
+          putc " "
           break
         end
       end
     end
     putc "\n"
   end
-    
-    
-  # if pixel == 2: look in the next layer
-  # else: return color
-  
 end
 
+first_puzzle
 second_puzzle
 
-# 0 is black
-# 1 is white
-# 2 is transparent
-# print first visible 
