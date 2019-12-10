@@ -2,9 +2,16 @@ require "minitest/autorun"
 
 POSITIONMODE = "0"
 IMMEDIATEMODE = "1"
-# TODO: add new parameter mode
+RELATIVEMODE = "2"
 
 class ProgramTests < Minitest::Test
+  
+  def test_quine
+    quine_code = "109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99"
+    intcode = quine_code.split(",")
+    program = Program.new(intcode)
+    assert_equal quine_code, program.run
+  end
   
   def test_large_number_output
     intcode = "104,1125899906842624,99".split(",")
@@ -26,7 +33,9 @@ class Program
   
     if first_param_index_mode == IMMEDIATEMODE
       first_input_index
-    else
+    elsif first_param_index_mode == RELATIVEMODE
+      Integer(@intcode[first_input_index + @relative_base])
+    elsif first_param_index_mode == POSITIONMODE || first_param_index_mode == nil
       Integer(@intcode[first_input_index])
     end
   end
@@ -48,50 +57,48 @@ class Program
 
   def run()
     # add base
-    i = 0
+    current_index = 0
     status_code = 0
+    
     loop do
     
-      if i == @intcode.length
+      if current_index == @intcode.length
         break
       end
       
-      command = @intcode[i]
+      command = @intcode[current_index]
       opcode = get_opcode_for_command(command.to_s)
          
       if opcode == :halt
-        return @status_code        
+        return status_code
       elsif opcode == :add
           
-        first_input_value = get_first_parameter_value(command, i)
-        second_input_value = get_second_parameter_value(command, i)   
-        output_index = get_third_parameter_value(command, i)
+        first_input_value = get_first_parameter_value(command, current_index)
+        second_input_value = get_second_parameter_value(command, current_index)
+        output_index = get_third_parameter_value(command, current_index)
         
         result = first_input_value + second_input_value
         @intcode[output_index] = result.to_s
         
       elsif opcode == :multiply
   
-        first_input_value = get_first_parameter_value(command, i)
-        second_input_value = get_second_parameter_value(command, i)
-        output_index = get_third_parameter_value(command, i)
+        first_input_value = get_first_parameter_value(command, current_index)
+        second_input_value = get_second_parameter_value(command, current_index)
+        output_index = get_third_parameter_value(command, current_index)
   
         result = first_input_value * second_input_value
         @intcode[output_index] = result.to_s
   
       elsif opcode == :read
   
-        first_input_value = Integer(@intcode[i+1])
-        @intcode[first_input_value] = 5 # first input value, this is a dirty hack
+        first_input_value = Integer(@intcode[current_index+1])
+        @intcode[first_input_value] = 1 # first input value, this is a dirty hack
         
       elsif opcode == :write
-      
-        first_input_index = Integer(@intcode[i+1])
-        @status_code = @intcode[first_input_index]
-  
+        status_code = get_first_parameter_value(command, current_index).to_s
       elsif opcode == :jump_if_true
-        first_input_value = get_first_parameter_value(command, i)
-        second_input_value = get_second_parameter_value(command, i)
+        first_input_value = get_first_parameter_value(command, current_index)
+        second_input_value = get_second_parameter_value(command, current_index)
   
         if first_input_value != 0
           i = Integer(second_input_value)
@@ -99,8 +106,8 @@ class Program
         end
   
       elsif opcode == :jump_if_false
-        first_input_value = get_first_parameter_value(command, i)
-        second_input_value = get_second_parameter_value(command, i)
+        first_input_value = get_first_parameter_value(command, current_index)
+        second_input_value = get_second_parameter_value(command, current_index)
   
         if first_input_value == 0
           i = Integer(second_input_value)
@@ -108,9 +115,9 @@ class Program
         end
   
       elsif opcode == :less_than
-        first_input_value = get_first_parameter_value(command, i)
-        second_input_value = get_second_parameter_value(command, i)
-        output_index = Integer(@intcode[i+3])
+        first_input_value = get_first_parameter_value(command, current_index)
+        second_input_value = get_second_parameter_value(command, current_index)
+        output_index = Integer(@intcode[current_index+3])
         
         if first_input_value < second_input_value
           @intcode[output_index] = "1"
@@ -119,9 +126,9 @@ class Program
         end
   
       elsif opcode == :equals
-        first_input_value = get_first_parameter_value(command, i)
-        second_input_value = get_second_parameter_value(command, i)
-        output_index = Integer(@intcode[i+3])
+        first_input_value = get_first_parameter_value(command, current_index)
+        second_input_value = get_second_parameter_value(command, current_index)
+        output_index = Integer(@intcode[current_index+3])
         
         parameters_equal = first_input_value == second_input_value
         if parameters_equal
@@ -130,15 +137,17 @@ class Program
           @intcode[output_index] = "0"
         end
       elsif opcode == :adjust_relative_base
-        first_input_value = get_first_parameter_value(command, i)
+        first_input_value = get_first_parameter_value(command, current_index)
+        @relative_base += first_input_value
+        
       else
         raise "Weird opcode (#{opcode} at #{i}), command: #{command}, aborting..."
       end
       
       number_of_parameters = number_of_parameters_for_opcode(opcode)
       
-      i += number_of_parameters
-      i += 1 # next command
+      current_index += number_of_parameters
+      current_index += 1 # next command
     end
   end
   
@@ -187,4 +196,7 @@ end
 
 first_puzzle
 
-# add unit tests
+quine_code = "109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99"
+intcode = quine_code.split(",")
+puts Program.new(intcode).run
+
