@@ -12,6 +12,18 @@ class Layer
     @image_data = image_data
   end
   
+  def count_zeros
+    count("0")
+  end
+  
+  def count_ones
+    count("1")
+  end
+  
+  def count_twos
+    count("2")
+  end
+  
   def count(number)
     @image_data.flatten.count(number)
   end
@@ -44,9 +56,9 @@ end
 
 def first_puzzle
   layers = create_layers()  
-  layer_with_fewest_zeros = layers.sort { |a, b| a.count("0") <=> b.count("0") }.first
+  layer_with_fewest_zeros = layers.sort_by(&:count_zeros).first
   
-  puts "Fewest Zeros: #{layer_with_fewest_zeros.count("0")}, number(1)*number(2) #{layer_with_fewest_zeros.count("1") * layer_with_fewest_zeros.count("2")}"
+  puts "Fewest Zeros: #{layer_with_fewest_zeros.count_zeros}, number(1)*number(2) #{layer_with_fewest_zeros.count_ones * layer_with_fewest_zeros.count_twos}"
 end
 
 def second_puzzle
