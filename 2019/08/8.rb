@@ -55,7 +55,7 @@ def second_puzzle
   puts "decoded image:"
   (0...IMAGE_HEIGHT).each { |height_index|
     (0...IMAGE_WIDTH).each { |width_index|
-      for layer in layers do
+      layers.each { |layer|
         pixel = layer.image_data[height_index][width_index]
         if pixel == "1"
           # 1 is white
@@ -66,7 +66,7 @@ def second_puzzle
           putc " "
           break
         end
-      end
+      }
     }
     putc "\n"
   }
