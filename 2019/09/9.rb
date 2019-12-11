@@ -28,26 +28,28 @@ class Program
   end
 
   def get_first_parameter_value(command, index)
-    first_input_index = Integer(@intcode[index+1])
-    first_param_index_mode = command[-3]
+    input_index = Integer(@intcode[index+1])
+    param_mode = command[-3]
   
-    if first_param_index_mode == IMMEDIATEMODE
-      first_input_index
-    elsif first_param_index_mode == RELATIVEMODE
-      Integer(@intcode[first_input_index + @relative_base])
-    elsif first_param_index_mode == POSITIONMODE || first_param_index_mode == nil
-      Integer(@intcode[first_input_index])
+    if param_mode == IMMEDIATEMODE
+      Integer(input_index)
+    elsif param_mode == RELATIVEMODE
+      Integer(@intcode[input_index + @relative_base])
+    elsif param_mode == POSITIONMODE || param_mode.nil?
+      Integer(@intcode[input_index])
     end
   end
 
   def get_second_parameter_value(command, index)
-    second_input_index = Integer(@intcode[index+2])
-    second_param_index_mode = command[-4]
-    
-    if second_param_index_mode == IMMEDIATEMODE
-      second_input_index
-    else
-      Integer(@intcode[second_input_index])
+    input_index = Integer(@intcode[index+2])
+    param_mode = command[-4]
+  
+    if param_mode == IMMEDIATEMODE
+      Integer(input_index)
+    elsif param_mode == RELATIVEMODE
+      Integer(@intcode[input_index + @relative_base])
+    elsif param_mode == POSITIONMODE || param_mode.nil?
+      Integer(@intcode[input_index])
     end
   end
 
@@ -70,7 +72,9 @@ class Program
       opcode = get_opcode_for_command(command.to_s)
          
       if opcode == :halt
+        
         return status_code
+        
       elsif opcode == :add
           
         first_input_value = get_first_parameter_value(command, current_index)
@@ -81,39 +85,44 @@ class Program
         @intcode[output_index] = result.to_s
         
       elsif opcode == :multiply
-  
+        
         first_input_value = get_first_parameter_value(command, current_index)
         second_input_value = get_second_parameter_value(command, current_index)
         output_index = get_third_parameter_value(command, current_index)
-  
+        
         result = first_input_value * second_input_value
         @intcode[output_index] = result.to_s
-  
+        
       elsif opcode == :read
-  
-        first_input_value = Integer(@intcode[current_index+1])
+        
+        first_input_value = get_first_parameter_value(command, current_index)
         @intcode[first_input_value] = 1 # first input value, this is a dirty hack
         
       elsif opcode == :write
+        
         status_code = get_first_parameter_value(command, current_index).to_s
+        puts status_code
+        
       elsif opcode == :jump_if_true
+        
         first_input_value = get_first_parameter_value(command, current_index)
         second_input_value = get_second_parameter_value(command, current_index)
-  
+        
         if first_input_value != 0
           i = Integer(second_input_value)
           next
         end
-  
+        
       elsif opcode == :jump_if_false
+        
         first_input_value = get_first_parameter_value(command, current_index)
         second_input_value = get_second_parameter_value(command, current_index)
-  
+        
         if first_input_value == 0
           i = Integer(second_input_value)
           next
         end
-  
+        
       elsif opcode == :less_than
         first_input_value = get_first_parameter_value(command, current_index)
         second_input_value = get_second_parameter_value(command, current_index)
@@ -124,7 +133,7 @@ class Program
         else
           @intcode[output_index] = "0"
         end
-  
+        
       elsif opcode == :equals
         first_input_value = get_first_parameter_value(command, current_index)
         second_input_value = get_second_parameter_value(command, current_index)
@@ -136,11 +145,12 @@ class Program
         else
           @intcode[output_index] = "0"
         end
+        
       elsif opcode == :adjust_relative_base
         first_input_value = get_first_parameter_value(command, current_index)
         @relative_base += first_input_value
-        
       else
+      
         raise "Weird opcode (#{opcode} at #{i}), command: #{command}, aborting..."
       end
       
@@ -194,8 +204,8 @@ def first_puzzle
   program.run
 end
 
-first_puzzle
-
+# first_puzzle
+# das problem ist, dass intcode[100] nicht existiert. was mache ich falsch?
 quine_code = "109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99"
 intcode = quine_code.split(",")
 puts Program.new(intcode).run
