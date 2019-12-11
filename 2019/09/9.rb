@@ -10,7 +10,8 @@ class ProgramTests < Minitest::Test
     quine_code = "109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99"
     intcode = quine_code.split(",")
     program = Program.new(intcode)
-    assert_equal quine_code, program.run
+    program.run
+    assert_equal quine_code, program.log.join(",")
   end
   
   def test_large_number_output
@@ -22,9 +23,12 @@ end
 
 class Program
 
+  attr_reader :log
+
   def initialize(intcode)
     @relative_base = 0
-    @intcode = intcode
+    @intcode = intcode + Array.new(1_000_000, "0")
+    @log = []
   end
 
   def get_first_parameter_value(command, index)
@@ -101,7 +105,7 @@ class Program
       elsif opcode == :write
         
         status_code = get_first_parameter_value(command, current_index).to_s
-        puts status_code
+        @log.append(status_code)
         
       elsif opcode == :jump_if_true
         
@@ -202,11 +206,7 @@ def first_puzzle
   intcode = IO.read("BOOST.txt").split(",")
   program = Program.new(intcode)
   program.run
+  puts "Log: #{program.log}"
 end
 
-# first_puzzle
-# das problem ist, dass intcode[100] nicht existiert. was mache ich falsch?
-quine_code = "109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99"
-intcode = quine_code.split(",")
-puts Program.new(intcode).run
-
+first_puzzle
