@@ -109,7 +109,7 @@ class Program
         second_input_value = get_second_parameter_value(command, current_index)
         
         if first_input_value != 0
-          i = Integer(second_input_value)
+          current_index = Integer(second_input_value)
           next
         end
         
@@ -119,7 +119,7 @@ class Program
         second_input_value = get_second_parameter_value(command, current_index)
         
         if first_input_value == 0
-          i = Integer(second_input_value)
+          current_index = Integer(second_input_value)
           next
         end
         
