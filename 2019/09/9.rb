@@ -1,9 +1,5 @@
 require "minitest/autorun"
 
-POSITIONMODE = "0"
-IMMEDIATEMODE = "1"
-RELATIVEMODE = "2"
-
 class ProgramTests < Minitest::Test
   
   def test_quine
@@ -19,15 +15,25 @@ class ProgramTests < Minitest::Test
     program = Program.new(intcode)
     assert_equal "1125899906842624", program.run
   end
+  
+  def test_large_number
+    intcode = "1102,34915192,34915192,7,4,7,99,0".split(",")
+    program = Program.new(intcode)
+    assert_equal 16, program.run.length
+  end
 end
 
 class Program
 
   attr_reader :log
+  
+  POSITIONMODE = "0"
+  IMMEDIATEMODE = "1"
+  RELATIVEMODE = "2"
 
   def initialize(intcode)
     @relative_base = 0
-    @intcode = intcode + Array.new(1_000_000, "0")
+    @intcode = intcode + Array.new(2_000_000, "0")
     @log = []
   end
 
@@ -73,6 +79,7 @@ class Program
       end
       
       command = @intcode[current_index]
+      
       opcode = get_opcode_for_command(command.to_s)
          
       if opcode == :halt
@@ -100,7 +107,7 @@ class Program
       elsif opcode == :read
         
         first_input_value = get_first_parameter_value(command, current_index)
-        @intcode[first_input_value] = 1 # first input value, this is a dirty hack
+        @intcode[first_input_value] = "1" # first input value, this is a dirty hack
         
       elsif opcode == :write
         
@@ -154,7 +161,6 @@ class Program
         first_input_value = get_first_parameter_value(command, current_index)
         @relative_base += first_input_value
       else
-      
         raise "Weird opcode (#{opcode} at #{i}), command: #{command}, aborting..."
       end
       
