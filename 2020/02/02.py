@@ -12,7 +12,6 @@ def valid_password(password: str, character: str, first_position: int, second_po
 
     return valid
 
-
 password_entries = open("passwords.txt", "r").readlines()
 
 valid_passwords = 0
@@ -30,8 +29,7 @@ for password_entry in password_entries:
 
     password_is_valid = valid_password(password, character, int(first_position), int(second_position))
     if password_is_valid:
-        print(password_entry)
         valid_passwords += 1
 
-print("Valid passwords: "+ str(valid_passwords))
+print("Valid passwords: {0}".format(str(valid_passwords)))
 
