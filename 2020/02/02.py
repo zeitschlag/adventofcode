@@ -31,5 +31,5 @@ for password_entry in password_entries:
     if password_is_valid:
         valid_passwords += 1
 
-print("Valid passwords: {0}".format(str(valid_passwords)))
+print("Valid passwords: {0}".format(valid_passwords))
 
