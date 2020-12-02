@@ -1,11 +1,14 @@
 # repeat for every line
 #   1. split with :, first part is rule, second part is password
 #   2. split rule at space: first part is amount (split again for min/max), second part is character
-#   3. check if character appears between min/max times in password aka min < str.count(character) < max
+#   3. check if character is either password[minimum+1] or password[maximum+1], but not both
 
-def valid_password(password: str, character: str, minimum: int, maximum: int):
-    number_chars = password.count(character)
-    valid = (int(minimum) <= number_chars <= int(maximum))
+def valid_password(password: str, character: str, first_position: int, second_position: int):
+
+    first = password[first_position-1]
+    second = password[second_position-1]
+
+    valid = (first == character) ^ (second == character)
 
     return valid
 
@@ -22,11 +25,12 @@ for password_entry in password_entries:
     raw_amounts = rule[0].strip()
     character = rule[1].strip()
     amounts = raw_amounts.split("-")
-    minimum = amounts[0]
-    maximum = amounts[1]
+    first_position = amounts[0]
+    second_position = amounts[1]
 
-    password_is_valid = valid_password(password, character, int(minimum), int(maximum))
+    password_is_valid = valid_password(password, character, int(first_position), int(second_position))
     if password_is_valid:
+        print(password_entry)
         valid_passwords += 1
 
 print("Valid passwords: "+ str(valid_passwords))
