@@ -33,5 +33,17 @@ if __name__ == "__main__":
         seat_id = calculate_seat_id(row=row, column=column)
         seat_ids.append(seat_id)
 
-    highest_seat_id = max(seat_ids)
-    print("Highest Seat-ID is {0}".format(highest_seat_id))
+    # find missing seat. we know: there are 128 rows and 8 seats per row
+    # let's brute-force (again)
+    for row in range(0, 127):
+        for column in range(0, 7):
+            seat_id = calculate_seat_id(row=row, column=column)
+            if seat_id in seat_ids:
+                pass
+            else:
+
+                seat_id_plus_one_exists = (seat_id + 1) in seat_ids
+                seat_id_minus_one_exists = (seat_id - 1) in seat_ids
+
+                if seat_id_plus_one_exists & seat_id_minus_one_exists:
+                    print("Please proceed to ({0}, {1}), Seat-ID: {2}".format(row, column, seat_id))
