@@ -66,7 +66,7 @@ class DaySixPuzzleTwoTests(unittest.TestCase):
     def test_count_all_answers_in_group_b(self):
         group_answer = "b"
         expected = 1
-        result = count_all_answers_in_group(group_answer=group_answer)
+        result = count_same_answers_in_group(group_answer=group_answer)
         self.assertEqual(expected, result)
 
 
