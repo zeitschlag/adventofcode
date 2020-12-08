@@ -55,9 +55,11 @@ def first_puzzle(filename: str):
         accumulator = result[1]
 
 def second_puzzle(filename: str):
+    original_instructions = read_instructions(filename=filename)
     instructions = read_instructions(filename=filename)
     done = False
     switched_lines = list()
+    switched = False
 
     while not done:
         index = 0
@@ -67,7 +69,7 @@ def second_puzzle(filename: str):
         while index < len(instructions):
 
             if index in visited_lines:
-                print("infinite loop")
+                switched = False
                 break
 
             visited_lines.append(index)
@@ -77,12 +79,24 @@ def second_puzzle(filename: str):
             operation = get_operation(instruction=instruction)
             argument = get_argument(instruction=instruction)
 
+            if (index not in switched_lines) & (operation != OPERATION_ACC) & (switched == False):
+                if operation == OPERATION_NOP:
+                    operation = OPERATION_JMP
+                elif operation == OPERATION_JMP:
+                    operation = OPERATION_NOP
+
+                switched_lines.append(index)
+                switched = True
+
             result = run(operation=operation, argument=argument, accumulator=accumulator)
 
             index += result[0]
             accumulator = result[1]
 
-        done = False
+            if index == len(original_instructions):
+                done = True
+                break
+
     print("acc: {0}".format(accumulator))
     return accumulator
 
