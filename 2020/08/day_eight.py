@@ -54,6 +54,39 @@ def first_puzzle(filename: str):
         i += result[0]
         accumulator = result[1]
 
+def second_puzzle(filename: str):
+    instructions = read_instructions(filename=filename)
+    done = False
+    switched_lines = list()
+
+    while not done:
+        index = 0
+        visited_lines = list()
+        accumulator = 0
+
+        while index < len(instructions):
+
+            if index in visited_lines:
+                print("infinite loop")
+                break
+
+            visited_lines.append(index)
+
+            instruction = instructions[index]
+
+            operation = get_operation(instruction=instruction)
+            argument = get_argument(instruction=instruction)
+
+            result = run(operation=operation, argument=argument, accumulator=accumulator)
+
+            index += result[0]
+            accumulator = result[1]
+
+        done = False
+    print("acc: {0}".format(accumulator))
+    return accumulator
+
+
 if __name__ == "__main__":
-    accumulator_value = first_puzzle(filename="instructions.txt")
+    accumulator_value = second_puzzle(filename="instructions.txt")
     print("Last accumulator-value was {0}".format(accumulator_value))

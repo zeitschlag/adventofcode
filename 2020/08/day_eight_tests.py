@@ -71,5 +71,12 @@ class DayEightTests(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
+    def test_second_puzzle(self):
+        expected = 8
+        result = second_puzzle(filename="sample_instructions.txt")
+
+        self.assertEqual(expected, result)
+
+
 if __name__ == '__main__':
     unittest.main()
