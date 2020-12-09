@@ -2,6 +2,7 @@ OPERATION_ACC = "acc"
 OPERATION_JMP = "jmp"
 OPERATION_NOP = "nop"
 
+
 def read_instructions(filename: str):
     raw_input = open(filename, "r").read()
     return raw_input.split("\n")
@@ -31,8 +32,8 @@ def run(operation: str, argument: int, accumulator: int):
     elif operation== OPERATION_JMP:
         return tuple([argument, accumulator])
 
-def first_puzzle(filename: str):
 
+def first_puzzle(filename: str):
     instructions = read_instructions(filename=filename)
     visited_lines = list()
     accumulator = 0
