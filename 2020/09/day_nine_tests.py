@@ -38,5 +38,12 @@ class DayNineCase(unittest.TestCase):
         result = find_first_invalid_number(filename=filename, length=length)
         self.assertEqual(expected, result)
 
+    def test_second_part(self):
+        filename = "sample_input.txt"
+        expected = 62
+        length = 5
+        result = second_part(filename=filename, length=length)
+        self.assertEqual(expected, result)
+
 if __name__ == '__main__':
     unittest.main()

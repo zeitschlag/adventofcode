@@ -26,6 +26,25 @@ def is_number_valid(number: int, code_list: list):
     return int(number) in sums
 
 
+def find_weakness(number: int, code_list: list):
+
+    minimum_slice_length = 2
+    maximum_slice_length = len(code_list)-1
+    index_of_invalid_number = code_list.index(number)
+
+    # generate all sliced lists
+    slices = list()
+    for i in range(index_of_invalid_number):
+        for j in range(1, index_of_invalid_number):
+            new_slice = code_list[i:j+1]
+            if len(new_slice)>=minimum_slice_length:
+                slices.append(new_slice)
+
+    for slice in slices:
+        if sum(slice) == number:
+            return slice
+
+
 def find_first_invalid_number(filename: str, length: int):
     # iterate over all codes, first preamble first 25 charts.
     # check each number afterwards:
@@ -51,6 +70,14 @@ def find_first_invalid_number(filename: str, length: int):
             return int(number)
 
 
+def second_part(filename: str, length: int):
+    xmas_codes = read_input(filename=filename)
+    first_invalid_number = find_first_invalid_number(filename=filename, length=length)
+    contigious_numbers = find_weakness(number=first_invalid_number, code_list=xmas_codes)
+
+    return sum([min(contigious_numbers), max(contigious_numbers)])
+
 if __name__ == "__main__":
-    first_invalid_number = first_part(filename="input.txt", length=25)
-    print("First invalid number: {0}".format(first_invalid_number))
+
+    encryption_weakness = second_part(filename="input.txt", length=25)
+    print("Encryption Weakness: {0}".format(encryption_weakness))
