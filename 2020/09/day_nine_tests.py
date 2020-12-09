@@ -35,7 +35,7 @@ class DayNineCase(unittest.TestCase):
         filename = "sample_input.txt"
         expected = 127
         length = 5
-        result = first_part(filename=filename, length=length)
+        result = find_first_invalid_number(filename=filename, length=length)
         self.assertEqual(expected, result)
 
 if __name__ == '__main__':

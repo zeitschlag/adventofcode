@@ -1,6 +1,11 @@
 def read_input(filename: str):
     raw_input = open(filename, "r").read()
-    return raw_input.split("\n")
+    raw_str_list = raw_input.split("\n")
+    int_list = list()
+    for i in raw_str_list:
+        int_list.append(int(i))
+
+    return int_list
 
 
 def preamble(code: list, offset: int, length):
@@ -21,7 +26,7 @@ def is_number_valid(number: int, code_list: list):
     return int(number) in sums
 
 
-def first_part(filename: str, length: int):
+def find_first_invalid_number(filename: str, length: int):
     # iterate over all codes, first preamble first 25 charts.
     # check each number afterwards:
     # if valid:
