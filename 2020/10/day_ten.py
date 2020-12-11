@@ -38,6 +38,10 @@ def get_number_of_joltage_differences(joltage_list: list):
     return deltas
 
 
+def count_distinct_adapter_paths(joltage_list):
+    pass
+
+
 def first_part(filename: str):
     joltage_list = read_int_input(filename=filename)
     deltas = get_number_of_joltage_differences(joltage_list=joltage_list)
