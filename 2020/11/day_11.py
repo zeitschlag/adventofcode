@@ -13,19 +13,32 @@ def read_seat_map(filename):
     return seat_map
 
 
-def stabilize_seat_map(seat_map):
+def stabilize_seat_map_for_ideal_humans(seat_map):
     stabilized = False
     old_seat_map = seat_map
-
     while not stabilized:
-         new_seat_map = generate_new_seat_map(old_seat_map=old_seat_map)
+         new_seat_map = generate_new_seat_map_for_ideal_humans(old_seat_map=old_seat_map)
          stabilized = (new_seat_map == old_seat_map)
          old_seat_map = new_seat_map
 
     return old_seat_map
 
 
-def generate_new_seat_map(old_seat_map):
+def stabilize_seat_map_for_real_humans(seat_map):
+    stabilized = False
+    old_seat_map = seat_map
+    round = 0
+    while not stabilized:
+        print("{0} calculating....".format(round))
+        new_seat_map = generate_new_seat_map_for_real_humans(old_seat_map=old_seat_map)
+        stabilized = (new_seat_map == old_seat_map)
+        old_seat_map = new_seat_map
+        round += 1
+
+    return old_seat_map
+
+
+def generate_new_seat_map_for_ideal_humans(old_seat_map):
     new_seat_map = list()
 
     for row_index in range(len(old_seat_map)):
@@ -51,10 +64,117 @@ def generate_new_seat_map(old_seat_map):
     return new_seat_map
 
 
+def generate_new_seat_map_for_real_humans(old_seat_map):
+    new_seat_map = list()
+
+    for row_index in range(len(old_seat_map)):
+        old_row = old_seat_map[row_index]
+        new_row = list()
+        for column_index in range(len(old_row)):
+            old_seat = old_row[column_index]
+
+            number_adjacent_occupied_seats = get_number_of_visible_occupied_seat(row=row_index, column=column_index, seat_map=old_seat_map)
+            # If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.
+            if (old_seat == EMPTY_SEAT) & (number_adjacent_occupied_seats == 0):
+                new_seat = OCCUPIED_SEAT
+            # If a seat is occupied (#) and four or more seats adjacent to it are also occupied, the seat becomes empty.
+            elif (old_seat == OCCUPIED_SEAT) & (number_adjacent_occupied_seats >= 5):
+                new_seat = EMPTY_SEAT
+            else:
+                # Otherwise, the seat's state does not change.
+                new_seat = old_seat
+
+            new_row.append(new_seat)
+
+        new_seat_map.append(new_row)
+    return new_seat_map
+
+
+#TODO adopt for part 2
+# look at the floor
+# if you an occupied seat: add this seat to the list
+def get_number_of_visible_occupied_seat(row, column, seat_map):
+    visible_seats = []
+
+    # find visible seat to the left
+    for i in reversed(range(column)):
+        seat_to_check = seat_map[row][i]
+
+        if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
+            visible_seats.append(seat_to_check)
+            break
+
+    # find visible seat to the right
+    for i in range(column+1, len(seat_map[row])):
+        seat_to_check = seat_map[row][i]
+
+        if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
+            visible_seats.append(seat_to_check)
+            break
+
+    # find visible seat above
+    for i in reversed(range(row)):
+        seat_to_check = seat_map[i][column]
+
+        if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
+            visible_seats.append(seat_to_check)
+            break
+
+    # find visible seat below
+    for i in range(row+1, len(seat_map)):
+        seat_to_check = seat_map[i][column]
+
+        if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
+            visible_seats.append(seat_to_check)
+            break
+
+    # find visible seat to the upper right diagonal
+    for cur_cul in range(column+1, len(seat_map[row])): # columns
+        for cur_row in reversed(range(row)): # row
+            seat_to_check = seat_map[cur_row][cur_cul]
+
+            if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
+                visible_seats.append(seat_to_check)
+
+            break
+        break
+
+
+    # find visible seat to the upper left diagonal
+    for i in reversed(range(column)):
+        for j in reversed(range(row)):
+            seat_to_check = seat_map[j][i]
+
+            if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
+                visible_seats.append(seat_to_check)
+                break
+
+    # find visible seat to the lower left diagonal
+    for i in reversed(range(column)):
+        for j in range(row+1, len(seat_map)):
+            seat_to_check = seat_map[j][i]
+
+            if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
+                visible_seats.append(seat_to_check)
+                break
+
+    # find visible seat to the lower right diagonal
+    for i in range(column+1, len(seat_map[row])):
+        for j in range(row+1, len(seat_map)):
+            seat_to_check = seat_map[j][i]
+
+            if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
+                visible_seats.append(seat_to_check)
+                break
+
+    return count_occupied_seats(visible_seats)
+
+
 def get_number_adjacent_occupied_seats(row, column, seat_map):
     adjacent_seats = []
 
     # [i - 1, j - 1], [i - 1, j], [i - 1, j + 1]
+    deltas = [-1, 0, 1]
     if row > 0:
         if column > 0:
             try:
@@ -126,11 +246,17 @@ def count_occupied_seats(seat_map):
 
 def first_part(filename):
     seat_map = read_seat_map(filename=filename)
-    stabilized_seatmap = stabilize_seat_map(seat_map=seat_map)
+    stabilized_seatmap = stabilize_seat_map_for_ideal_humans(seat_map=seat_map)
     occupied_seats = count_occupied_seats(seat_map=stabilized_seatmap)
     print("There are {0} occupied seats in the stabilized seat map".format(occupied_seats))
 
 
+def second_part(filename):
+    seat_map = read_seat_map(filename=filename)
+    stabilized_seatmap = stabilize_seat_map_for_real_humans(seat_map=seat_map)
+    occupied_seats = count_occupied_seats(seat_map=stabilized_seatmap)
+    print("There are {0} occupied seats in the stabilized seat map".format(occupied_seats))
+
 
 if __name__ == "__main__":
-    first_part(filename="input.txt")
+    second_part(filename="input.txt")
