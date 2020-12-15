@@ -27,9 +27,7 @@ def stabilize_seat_map_for_ideal_humans(seat_map):
 def stabilize_seat_map_for_real_humans(seat_map):
     stabilized = False
     old_seat_map = seat_map
-    round = 0
     while not stabilized:
-        print("{0} calculating....".format(round))
         new_seat_map = generate_new_seat_map_for_real_humans(old_seat_map=old_seat_map)
         stabilized = (new_seat_map == old_seat_map)
         old_seat_map = new_seat_map
@@ -59,8 +57,8 @@ def generate_new_seat_map_for_ideal_humans(old_seat_map):
                 new_seat = old_seat
 
             new_row.append(new_seat)
-
         new_seat_map.append(new_row)
+
     return new_seat_map
 
 
@@ -73,16 +71,20 @@ def generate_new_seat_map_for_real_humans(old_seat_map):
         for column_index in range(len(old_row)):
             old_seat = old_row[column_index]
 
-            number_adjacent_occupied_seats = get_number_of_visible_occupied_seat(row=row_index, column=column_index, seat_map=old_seat_map)
-            # If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.
-            if (old_seat == EMPTY_SEAT) & (number_adjacent_occupied_seats == 0):
-                new_seat = OCCUPIED_SEAT
-            # If a seat is occupied (#) and four or more seats adjacent to it are also occupied, the seat becomes empty.
-            elif (old_seat == OCCUPIED_SEAT) & (number_adjacent_occupied_seats >= 5):
-                new_seat = EMPTY_SEAT
-            else:
-                # Otherwise, the seat's state does not change.
+            if old_seat == FLOOR:
                 new_seat = old_seat
+            else:
+
+                number_adjacent_occupied_seats = get_number_of_visible_occupied_seat(row=row_index, column=column_index, seat_map=old_seat_map)
+            # If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.
+                if (old_seat == EMPTY_SEAT) & (number_adjacent_occupied_seats == 0):
+                    new_seat = OCCUPIED_SEAT
+            # If a seat is occupied (#) it now takes five or more visible occupied seats for an occupied seat to become empty
+                elif (old_seat == OCCUPIED_SEAT) & (number_adjacent_occupied_seats >= 5):
+                    new_seat = EMPTY_SEAT
+                else:
+                # Otherwise, the seat's state does not change.
+                    new_seat = old_seat
 
             new_row.append(new_seat)
 
@@ -128,44 +130,72 @@ def get_number_of_visible_occupied_seat(row, column, seat_map):
             visible_seats.append(seat_to_check)
             break
 
-    # find visible seat to the upper right diagonal
-    for cur_cul in range(column+1, len(seat_map[row])): # columns
-        for cur_row in reversed(range(row)): # row
-            seat_to_check = seat_map[cur_row][cur_cul]
-
-            if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
-                visible_seats.append(seat_to_check)
-
+    # diagonal up right
+    row_list = list(range(1, row+1))
+    for cur_row in row_list:
+        col_to_check = column+cur_row
+        row_to_check = row-cur_row
+        if col_to_check > len(seat_map[row])-1:
             break
-        break
 
+        if row_to_check < 0:
+            break
 
-    # find visible seat to the upper left diagonal
-    for i in reversed(range(column)):
-        for j in reversed(range(row)):
-            seat_to_check = seat_map[j][i]
+        seat_to_check = seat_map[row_to_check][col_to_check]
+        if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
+            visible_seats.append(seat_to_check)
+            break
 
-            if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
-                visible_seats.append(seat_to_check)
-                break
+    # diagonal down right
+    row_list = list(range(1, len(seat_map)-row))
+    for cur_row in row_list:
+        col_to_check = column+cur_row
+        row_to_check = row+cur_row
+        if col_to_check > len(seat_map[row])-1:
+            break
 
-    # find visible seat to the lower left diagonal
-    for i in reversed(range(column)):
-        for j in range(row+1, len(seat_map)):
-            seat_to_check = seat_map[j][i]
+        if row_to_check > len(seat_map)-1:
+            break
 
-            if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
-                visible_seats.append(seat_to_check)
-                break
+        seat_to_check = seat_map[row_to_check][col_to_check]
 
-    # find visible seat to the lower right diagonal
-    for i in range(column+1, len(seat_map[row])):
-        for j in range(row+1, len(seat_map)):
-            seat_to_check = seat_map[j][i]
+        if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
+            visible_seats.append(seat_to_check)
+            break
 
-            if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
-                visible_seats.append(seat_to_check)
-                break
+    # diagonal up left
+    row_list = range(1, row+1)
+    for cur_row in row_list:
+        col_to_check = column-cur_row
+        row_to_check = row-cur_row
+        if col_to_check < 0 :
+            break
+
+        if row_to_check < 0:
+            break
+
+        seat_to_check = seat_map[row_to_check][col_to_check]
+
+        if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
+            visible_seats.append(seat_to_check)
+            break
+
+    # diagonal down left
+    row_list = list(range(1, len(seat_map)-row))
+    for cur_row in row_list:
+        col_to_check = column-cur_row
+        row_to_check = row+cur_row
+        if col_to_check < 0:
+            break
+
+        if row_to_check > len(seat_map)-1:
+            break
+
+        seat_to_check = seat_map[row_to_check][col_to_check]
+
+        if (seat_to_check == OCCUPIED_SEAT) or (seat_to_check == EMPTY_SEAT):
+            visible_seats.append(seat_to_check)
+            break
 
     return count_occupied_seats(visible_seats)
 
@@ -174,7 +204,6 @@ def get_number_adjacent_occupied_seats(row, column, seat_map):
     adjacent_seats = []
 
     # [i - 1, j - 1], [i - 1, j], [i - 1, j + 1]
-    deltas = [-1, 0, 1]
     if row > 0:
         if column > 0:
             try:

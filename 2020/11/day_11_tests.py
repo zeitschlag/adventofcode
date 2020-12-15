@@ -158,6 +158,37 @@ class DayElevenTests(unittest.TestCase):
         new_seat_map = generate_new_seat_map_for_ideal_humans(old_seat_map=old_seat_map)
         self.assertListEqual(new_seat_map, expected_new_seat_map)
 
+    def test_generate_new_seat_map_for_real(self):
+        old_seat_map =  [
+            ["#", ".", "#", "#", ".", "#", "#", ".", "#", "#"],
+            ["#", "#", "#", "#", "#", "#", "#", ".", "#", "#"],
+            ["#", ".", "#", ".", "#", ".", ".", "#", ".", "."],
+            ["#", "#", "#", "#", ".", "#", "#", ".", "#", "#"],
+            ["#", ".", "#", "#", ".", "#", "#", ".", "#", "#"],
+            ["#", ".", "#", "#", "#", "#", "#", ".", "#", "#"],
+            [".", ".", "#", ".", "#", ".", ".", ".", ".", "."],
+            ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
+            ["#", ".", "#", "#", "#", "#", "#", "#", ".", "#"],
+            ["#", ".", "#", "#", "#", "#", "#", ".", "#", "#"],
+        ]
+
+        expected_new_seat_map = [
+            ["#", ".", "L", "L", ".", "L", "L", ".", "L", "#"],
+            ["#", "L", "L", "L", "L", "L", "L", ".", "L", "L"],
+            ["L", ".", "L", ".", "L", ".", ".", "L", ".", "."],
+            ["L", "L", "L", "L", ".", "L", "L", ".", "L", "L"],
+            ["L", ".", "L", "L", ".", "L", "L", ".", "L", "L"],
+            ["L", ".", "L", "L", "L", "L", "L", ".", "L", "L"],
+            [".", ".", "L", ".", "L", ".", ".", ".", ".", "."],
+            ["L", "L", "L", "L", "L", "L", "L", "L", "L", "#"],
+            ["#", ".", "L", "L", "L", "L", "L", "L", ".", "L"],
+            ["#", ".", "L", "L", "L", "L", "L", ".", "L", "#"],
+        ]
+
+        new_seat_map = generate_new_seat_map_for_real_humans(old_seat_map=old_seat_map)
+
+        self.assertListEqual(new_seat_map, expected_new_seat_map)
+
     def test_get_number_of_visible_occupied_seat_0(self):
         seat_map = [
             [".", "#", "#", ".", "#", "#", "."],
@@ -190,7 +221,6 @@ class DayElevenTests(unittest.TestCase):
         result = get_number_of_visible_occupied_seat(row=4, column=3, seat_map=seat_map)
         self.assertEqual(result, expected)
 
-
     def test_get_number_of_visible_occupied_visible_seat(self):
         seat_map = [
             [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ],
@@ -198,9 +228,37 @@ class DayElevenTests(unittest.TestCase):
             [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ],
         ]
 
-        expected = 1
+        expected = 0
         result = get_number_of_visible_occupied_seat(row=1, column=1, seat_map=seat_map)
         self.assertEqual(result, expected)
+
+    def test_stabilize_real_seatmap(self):
+        seat_map = [
+            ["L", ".", "L", "L", ".", "L", "L", ".", "L", "L", ],
+            ["L", "L", "L", "L", "L", "L", "L", ".", "L", "L", ],
+            ["L", ".", "L", ".", "L", ".", ".", "L", ".", ".", ],
+            ["L", "L", "L", "L", ".", "L", "L", ".", "L", "L", ],
+            ["L", ".", "L", "L", ".", "L", "L", ".", "L", "L", ],
+            ["L", ".", "L", "L", "L", "L", "L", ".", "L", "L", ],
+            [".", ".", "L", ".", "L", ".", ".", ".", ".", ".", ],
+            ["L", "L", "L", "L", "L", "L", "L", "L", "L", "L", ],
+            ["L", ".", "L", "L", "L", "L", "L", "L", ".", "L", ],
+            ["L", ".", "L", "L", "L", "L", "L", ".", "L", "L", ],
+        ]
+        expected_stabilized_seat_map = [
+            ["#", ".", "L", "#", ".", "L", "#", ".", "L", "#", ],
+            ["#", "L", "L", "L", "L", "L", "L", ".", "L", "L", ],
+            ["L", ".", "L", ".", "L", ".", ".", "#", ".", ".", ],
+            ["#", "#", "L", "#", ".", "#", "L", ".", "L", "#", ],
+            ["L", ".", "L", "#", ".", "L", "L", ".", "L", "#", ],
+            ["#", ".", "L", "L", "L", "L", "#", ".", "L", "L", ],
+            [".", ".", "#", ".", "L", ".", ".", ".", ".", ".", ],
+            ["L", "L", "L", "#", "#", "#", "L", "L", "L", "#", ],
+            ["#", ".", "L", "L", "L", "L", "L", "#", ".", "L", ],
+            ["#", ".", "L", "#", "L", "L", "#", ".", "L", "#", ],
+        ]
+        stabilized_seat_map = stabilize_seat_map_for_real_humans(seat_map=seat_map)
+        self.assertListEqual(stabilized_seat_map, expected_stabilized_seat_map)
 
 
 if __name__ == '__main__':
