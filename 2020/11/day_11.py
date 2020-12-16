@@ -31,7 +31,6 @@ def stabilize_seat_map_for_real_humans(seat_map):
         new_seat_map = generate_new_seat_map_for_real_humans(old_seat_map=old_seat_map)
         stabilized = (new_seat_map == old_seat_map)
         old_seat_map = new_seat_map
-        round += 1
 
     return old_seat_map
 
