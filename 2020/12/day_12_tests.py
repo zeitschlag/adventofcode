@@ -34,7 +34,13 @@ class DayTwelveTests(unittest.TestCase):
     calculated_endpoint = run(instructions=instructions)
     
     self.assertDictEqual(calculated_endpoint, expected_endpoint)
-        
+    
+  def test_run_waypoint_instructions(self):
+    instructions = ["F10", "N3", "F7", "R90", "F11"]
+    expected_endpoint = {"x": 214, "y": -72}
+    calculated_endpoint = run_waypoint(instructions=instructions)
+    
+    self.assertDictEqual(calculated_endpoint, expected_endpoint)
   
 if __name__ == "__main__":
   unittest.main()
