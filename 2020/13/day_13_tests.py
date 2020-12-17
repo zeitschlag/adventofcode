@@ -72,8 +72,19 @@ class DayThirteenUnitTests(unittest.TestCase):
     valid_buses = [67, 7, 59,61]
     expected = 1261476
     result = find_earliest_timestamp(bus_list=buses, valid_buses=valid_buses, starting_point=0)
-#    find_earliest_timestamp(bus_list, valid_buses, starting_point)
+  
+  def test_find_earliest_timestamp_1202161486(self):
+    buses = ["1789","37","47","1889"]
+    valid_buses = [1789,37,47,1889]
+    expected = 1202161486
+    result = find_earliest_timestamp(bus_list=buses, valid_buses=valid_buses, starting_point=0)
 
+    self.assertEqual(result, expected)
+    
+  def test_second_part(self):
+    expected = 1068781
+    result = second_part(filename="sample_input.txt")
+    
     self.assertEqual(result, expected)
 
 
