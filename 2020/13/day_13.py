@@ -23,10 +23,16 @@ def get_valid_buses(notes):
     if bus == "x":
       continue
 
-    new_bus = int(bus)
+    new_bus = int(bus.strip())
     valid_buses.append(new_bus)
 
+  # import pdb; pdb.set_trace()
   return valid_buses
+
+
+def get_buses(notes):
+  bus_list = notes[1]
+  return bus_list
 
 
 def get_earliest_bus(earliest_timestamp, bus_list):
@@ -48,6 +54,33 @@ def get_earliest_bus(earliest_timestamp, bus_list):
   return {"id": bus_id, "timestamp": bus_timestamp}
 
 
+def find_earliest_timestamp(bus_list: list, valid_buses, starting_point):
+
+  found_number = False
+  delta = valid_buses[0]
+  candidate = starting_point
+
+  while not found_number:
+
+    # for all in valid_buses
+    for_all = True
+    for bus in valid_buses:
+      index = bus_list.index(str(bus))
+      is_valid = ((candidate + index != 0) and (candidate + index) % bus == 0)
+      if is_valid == False:
+        for_all = False
+        break
+      for_all &= is_valid
+
+    if for_all:
+      found_number = True
+    else:
+      candidate += delta
+      print("checking {0}".format(candidate))
+
+  return candidate
+
+
 def first_part(filename):
 
   notes = read_input(filename=filename)
@@ -62,7 +95,21 @@ def first_part(filename):
   return result
 
 
+def second_part(filename):
+  notes = read_input(filename=filename)
+  earliest_possible_timestamp = get_timestamp(notes)
+  valid_buses = get_valid_buses(notes)
+  bus_list = get_buses(notes)
+  starting_point = 100000000000000
+  earliest_timestamp = find_earliest_timestamp(
+    bus_list=bus_list, valid_buses=valid_buses, starting_point=starting_point)
+
+  return earliest_timestamp
+
+
 if __name__ == "__main__":
   print("The solution for the first part is {0}".format(
     first_part(filename="input.txt")))
+  print("The solution for the second part is {0}".format(
+    second_part(filename="input.txt")))
 
