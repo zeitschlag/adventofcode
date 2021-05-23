@@ -50,7 +50,6 @@ func calculateCaptcha(digits []int) int {
 
 func main() {
   digits, _ := readList("input.txt")
-  fmt.Println(digits)
   captcha := calculateCaptcha(digits)
   fmt.Println(captcha)
 }
