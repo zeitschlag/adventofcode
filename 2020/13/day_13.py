@@ -26,7 +26,6 @@ def get_valid_buses(notes):
     new_bus = int(bus.strip())
     valid_buses.append(new_bus)
 
-  # import pdb; pdb.set_trace()
   return valid_buses
 
 
@@ -64,20 +63,17 @@ def find_earliest_timestamp(bus_list: list, valid_buses, starting_point):
 
     # for all in valid_buses
     for_all = True
-    for bus in valid_buses:
+    for bus in valid_buses[1:]:
       index = bus_list.index(str(bus))
-      is_valid = ((candidate + index != 0) and (candidate + index) % bus == 0)
-      if is_valid == False:
+      is_valid = (candidate % bus) == (bus - index)
+      if not is_valid:
         for_all = False
         break
-      for_all &= is_valid
 
-    if for_all:
-      found_number = True
-    else:
+    found_number = for_all
+    if not found_number:
       candidate += delta
-      print("checking {0}".format(candidate))
-
+  
   return candidate
 
 
@@ -100,7 +96,7 @@ def second_part(filename):
   earliest_possible_timestamp = get_timestamp(notes)
   valid_buses = get_valid_buses(notes)
   bus_list = get_buses(notes)
-  starting_point = 100000000000000
+  starting_point = 0 #  100000000000004
   earliest_timestamp = find_earliest_timestamp(
     bus_list=bus_list, valid_buses=valid_buses, starting_point=starting_point)
 
