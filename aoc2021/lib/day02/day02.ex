@@ -13,7 +13,6 @@ defmodule AoC2021.Day02 do
     end
 
     def parse(filename) do
-      # todo: read file, make instructions-map with atoms and int
       {:ok, content} = File.read(filename)
 
       String.split(content, "\n")
